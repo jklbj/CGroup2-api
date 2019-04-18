@@ -24,13 +24,13 @@ module CGroup2
             
         end
 
-        attr_reader :Calendar_id, :title, :leader_id, :leader_name, :description, :limit_member, :group_founded_date, :group_founded_time, :due_date, :due_time, :member_id, :event_start_date, :event_start_time, :event_end_date, :event_end_time
+        attr_reader :calendar_id, :title, :leader_id, :leader_name, :description, :limit_member, :group_founded_date, :group_founded_time, :due_date, :due_time, :member_id, :event_start_date, :event_start_time, :event_end_date, :event_end_time
 
         def to_json(options = {})
             JSON(
                 {
                     type: 'calendar_event',
-                    calendar_id, : calendar_id,
+                    calendar_id: calendar_id,
                     title: title,
                     leader_id: leader_id,
                     leader_name: leader_name,
@@ -57,13 +57,13 @@ module CGroup2
 
         # Stores document in file store
         def save
-            File.write(STORE_DIR + id + '.txt', to_json)
+            File.write(STORE_DIR + calendar_id + '.txt', to_json)
         end
 
         # Query method to find one document
         def self.find(find_id)
             calendar_file = File.read(STORE_DIR + find_id + '.txt')
-            Transaction.new JSON.parse(calendar_file)
+            Calendar.new JSON.parse(calendar_file)
         end
 
         def self.all

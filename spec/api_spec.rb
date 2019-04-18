@@ -31,16 +31,15 @@ describe 'Test Calendar Web API' do
       CGroup2::Calendar.new(DATA[0]).save
       CGroup2::Calendar.new(DATA[1]).save
 
-      get 'api/v1/calendars'
+      get 'api/v1/calendar_events'
       result = JSON.parse last_response.body
-      _(result['calendar_id'].count).must_equal 2
+      _(result['calendar_event_ids'].count).must_equal 2
     end
 
     it 'HAPPY: should be able to get details of a single calendar' do
       CGroup2::Calendar.new(DATA[1]).save
       id = Dir.glob('app/db/store/*.txt').first.split(%r{[/\.]})[3]
-
-      get "/api/v1/calendars/#{id}"
+      get "/api/v1/calendar_events/#{id}"
       result = JSON.parse last_response.body
 
       _(last_response.status).must_equal 200
@@ -48,14 +47,14 @@ describe 'Test Calendar Web API' do
     end
 
     it 'SAD: should return error if unknown calendar requested' do
-      get '/api/v1/calendars/foobar'
+      get '/api/v1/calendar_events/foobar'
 
       _(last_response.status).must_equal 404
     end
 
     it 'HAPPY: should be able to create new calendars' do
       req_header = { 'CONTENT_TYPE' => 'application/json' }
-      post 'api/v1/calendars', DATA[1].to_json, req_header
+      post 'api/v1/calendar_events', DATA[1].to_json, req_header
 
       _(last_response.status).must_equal 201
     end

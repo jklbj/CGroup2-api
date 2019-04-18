@@ -2,51 +2,51 @@
 require 'roda'
 require 'json'
 
-require_relative '../models/event'
+require_relative '../models/calendar'
 
-module CGroup
-  # Web controller for Fibuy API
+module CGroup2
+  # Web controller for CGroup2 API
   class Api < Roda
     plugin :environments
     plugin :halt
 
     configure do
-      Event.setup
+      Calendar.setup
     end
 
     route do |routing| # rubocop:disable Metrics/BlockLength
       response['Content-Type'] = 'application/json'
 
       routing.root do
-        { message: 'FibuyAPI up at /api/v1' }.to_json
+        { message: 'CGroupAPI up at /api/v1' }.to_json
       end
 
       routing.on 'api' do
         routing.on 'v1' do
-          routing.on 'events' do
-            # GET api/v1/events/[id]
+          routing.on 'calendar_events' do
+            # GET api/v1/calender_events/[id]
             routing.get String do |id|
-                Event.find(id).to_json
+                Calendar.find(id).to_json
             rescue StandardError
-              routing.halt 404, { message: 'Event not found' }.to_json
+              routing.halt 404, { message: 'Calendar event not found' }.to_json
             end
 
-            # GET api/v1/events
+            # GET api/v1/calender_events
             routing.get do
-              output = { event_ids: Event.all }
+              output = { calendar_event_ids: Calendar.all }
               JSON.pretty_generate(output)
             end
 
-            # POST api/v1/events
+            # POST api/v1/calender_events
             routing.post do
               new_data = JSON.parse(routing.body.read)
-              new_ev = Event.new(new_data)
+              new_ev = Calendar.new(new_data)
 
               if new_ev.save
                 response.status = 201
-                { message: 'Event saved', id: new_ev.id }.to_json
+                { message: 'Calendar event saved', calendar_id: new_ev.calendar_id }.to_json
               else
-                routing.halt 400, { message: 'Could not save event' }.to_json
+                routing.halt 400, { message: 'Could not save calendar event' }.to_json
               end
             end
           end

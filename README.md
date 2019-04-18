@@ -7,9 +7,9 @@ API to store and retrieve confidential development files (configuration, events)
 All routes return Json
 
 - GET `/`: Root route shows if Web API is running
-- GET `api/v1/group_event/`: returns all event IDs
-- GET `api/v1/group_event/[ID]`: returns details about a single event with given ID
-- POST `api/v1/group_event/`: creates a new event
+- GET `api/v1/calendar_events/`: returns all calendar event IDs
+- GET `api/v1/calendar_events/[ID]`: returns details about a single calendar event with given ID
+- POST `api/v1/calendar_events/`: creates a new event
 
 ## Install
 
