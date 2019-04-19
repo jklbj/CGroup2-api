@@ -36,7 +36,7 @@ end
 
 desc 'Run application console (pry)'
 task :console => :print_env do
-  sh 'pry -r ./specs/test_load_all'
+  sh 'pry -r ./spec/test_load_all'
 end
 
 namespace :db do
@@ -44,7 +44,7 @@ namespace :db do
   require 'sequel'
 
   Sequel.extension :migration
-  app = Credence::Api
+  app = CGroup2::Api
 
   desc 'Run migrations'
   task :migrate => :print_env do
@@ -54,8 +54,9 @@ namespace :db do
 
   desc 'Delete database'
   task :delete do
-    app.DB[:documents].delete
-    app.DB[:projects].delete
+    app.DB[:user].delete
+    app.DB[:calendar].delete
+    app.DB[:group].delete
   end
 
   desc 'Delete dev or test database file'

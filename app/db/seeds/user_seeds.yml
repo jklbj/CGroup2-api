@@ -1,0 +1,13 @@
+---
+- name: 'JeffHsu'
+  email: 'JeffHsu@gmail.com'
+  description: 'Good1'
+  account: 'JeffHsuAccount'
+  password: 'JeffHsuPassword'
+  sex: 1
+- name: 'KevinYang'
+  email: 'KevinYang@gmail.com'
+  description: 'Good2'
+  account: 'KevinYangAccount'
+  password: 'KevinYangPassword'
+  sex: 1
