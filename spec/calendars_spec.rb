@@ -23,7 +23,7 @@ describe 'Test Document Handling' do
     _(last_response.status).must_equal 200
 
     result = JSON.parse last_response.body
-    _(result['data'].count).must_equal 2
+    _(result['calendar_ids'].count).must_equal 2
   end
 
   it 'HAPPY: should be able to get details of a single calendar event' do
@@ -34,12 +34,13 @@ describe 'Test Document Handling' do
     get "/api/v1/users/#{usr.user_id}/calendar_events/#{event.calendar_id}"
     _(last_response.status).must_equal 200
 
-    result = JSON.parse last_response.body
-    _(result['data']['attributes']['calendar_id']).must_equal cal.calendar_id
-    _(result['data']['attributes']['title']).must_equal event_data['title']
-    _(result['data']['attributes']['leader_id']).must_equal event_data['leader_id']
-    _(result['data']['attributes']['limit_member']).must_equal event_data['limit_member']
-    _(result['data']['attributes']['member_id']).must_equal event_data['member_id']
+    result_attribute = JSON.parse(last_response.body)['data']['attribute']
+    
+    _(result_attribute['calendar_id']).must_equal event.calendar_id
+    _(result_attribute['title']).must_equal event_data['title']
+    _(result_attribute['description']).must_equal event_data['description']
+    # _(result_attribute['event_start_at']).must_equal event_data['event_start_at']
+    # _(result_attribute['event_end_at']).must_equal event_data['event_end_at']
   end
 
   it 'SAD: should return error if unknown calendar event requested' do
@@ -59,13 +60,13 @@ describe 'Test Document Handling' do
     _(last_response.status).must_equal 201
     _(last_response.header['Location'].size).must_be :>, 0
 
-    created = JSON.parse(last_response.body)['data']['data']['attributes']
+    created = JSON.parse(last_response.body)['data']['data']['attribute']
     event = CGroup2::Calendar.first
 
     _(created['calendar_id']).must_equal event.calendar_id
     _(created['title']).must_equal event_data['title']
-    _(created['leader_id']).must_equal event_data['leader_id']
-    _(created['limit_member']).must_equal event_data['limit_member']
-    _(created['member_id']).must_equal event_data['member_id']
+    _(created['description']).must_equal event_data['description']
+    # _(created['event_start_at']).must_equal event_data['event_start_at']
+    # _(created['event_end_at']).must_equal event_data['event_end_at']
   end
 end

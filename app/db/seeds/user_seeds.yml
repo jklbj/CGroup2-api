@@ -1,13 +1,13 @@
 ---
 - name: 'JeffHsu'
   email: 'JeffHsu@gmail.com'
-  description: 'Good1'
-  account: 'JeffHsuAccount'
-  password: 'JeffHsuPassword'
+  account: 'goodboy'
+  password: '12234'
   sex: 1
+  birth: '2019-10-08'
 - name: 'KevinYang'
   email: 'KevinYang@gmail.com'
-  description: 'Good2'
-  account: 'KevinYangAccount'
-  password: 'KevinYangPassword'
+  account: 'handsomeguy'
+  password: '12345'
   sex: 1
+  birth: '2017-10-08'

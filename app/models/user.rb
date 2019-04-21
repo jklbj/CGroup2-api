@@ -23,6 +23,8 @@ module CGroup2
               name: name,
               sex: sex,
               email: email,
+              account: account,
+              password: password,
               birth: birth
             }
           }

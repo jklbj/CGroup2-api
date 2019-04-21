@@ -19,7 +19,6 @@ module CGroup2
                         attribute: {
                             group_id: group_id,
                             title: title,
-                            leader_name: leader_name,
                             description: description,
                             limit_number: limit_number,
                             due_at: due_at,

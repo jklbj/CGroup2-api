@@ -8,10 +8,10 @@ require 'yaml'
 
 require_relative 'test_load_all'
 
-def wipe_database
-  app.DB[:users].delete
+def wipe_database  
   app.DB[:calendars].delete
   app.DB[:groups].delete
+  app.DB[:users].delete
 end
 
 DATA = {} # rubocop:disable Style/MutableConstant

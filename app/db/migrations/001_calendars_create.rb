@@ -16,7 +16,7 @@ Sequel.migration do
       DateTime :created_at
       DateTime :updated_at
 
-      unique [:user_id]
+      unique [:user_id, :calendar_id]
     end
   end
 end

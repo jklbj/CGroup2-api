@@ -20,7 +20,7 @@ Sequel.migration do
       DateTime :created_at
       DateTime :updated_at
 
-      unique [:user_id]
+      unique [:user_id, :group_id]
     end
   end
 end

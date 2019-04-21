@@ -5,11 +5,11 @@
   limit_number: 4
   due_at: '2019-04-21 12:13:40'
   event_start_at: '2019-04-20 12:13:40'
-  event_end_date: '2019-05-01 10:00:00'
+  event_end_at: '2019-05-01 10:00:00'
 - title: 'sell candies'
   description: 'Gd2'
   member_id: 'KT, DW'
   limit_number: 3
   due_at: '2019-04-22 12:13:40'
   event_start_at: '2019-04-21 12:13:40'
-  event_end_date: '2019-05-02 10:00:00'
+  event_end_at: '2019-05-02 10:00:00'
