@@ -127,7 +127,17 @@ module CGroup2
 					rescue StandardError => error
 						routing.halt 400, { message: error.message }.to_json
 					end
-        end
+				end
+				
+				routing.on 'group_events' do
+					@group_route = "#{@api_root}/group_events"
+					
+					#GET api/v1/group_events
+					routing.get do
+						output = { group_ids: Group.all}
+						JSON.pretty_generate(output)
+					end
+				end
       end
     end
   end

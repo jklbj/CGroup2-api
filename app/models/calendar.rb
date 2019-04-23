@@ -12,6 +12,39 @@ module CGroup2
         plugin :whitelist_security
         set_allowed_columns :title, :description, :description, :event_start_at, :event_end_at
 
+        # Secure getters and setters
+        def title
+            SecureDB.decrypt(title_secure)
+        end
+    
+        def title=(plaintext)
+            self.title_secure = SecureDB.encrypt(plaintext)
+        end
+
+        def description
+            SecureDB.decrypt(description_secure)
+        end
+    
+        def description=(plaintext)
+            self.description_secure = SecureDB.encrypt(plaintext)
+        end
+    
+        def event_start_at
+            SecureDB.decrypt(event_start_at_secure)
+        end
+    
+        def event_start_at=(plaintext)
+            self.event_start_at_secure = SecureDB.encrypt(plaintext)
+        end
+
+        def event_end_at
+            SecureDB.decrypt(event_end_at_secure)
+        end
+    
+        def event_end_at=(plaintext)
+            self.event_end_at_secure = SecureDB.encrypt(plaintext)
+        end
+
         # rubocop:disable MethodLength
         def to_json(options = {})
             JSON(
