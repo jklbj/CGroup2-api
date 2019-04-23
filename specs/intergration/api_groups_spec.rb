@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './spec_helper'
+require_relative '../spec_helper'
 
 describe 'Test Document Handling' do
   include Rack::Test::Methods
@@ -51,23 +51,42 @@ describe 'Test Document Handling' do
     _(last_response.status).must_equal 404
   end
 
-  it 'HAPPY: should be able to create new group' do
-    usr = CGroup2::User.first
-    existing_group = DATA[:groups][1]
+  describe 'Creating group event' do
+    before do
+      @user = CGroup2::User.first
+      @event_data = DATA[:groups][1]
+      @req_header = { 'CONTENT_TYPE' => 'application/json' }
+    end
 
-    req_header = { 'CONTENT_TYPE' => 'application/json' }
-    
-    post "/api/v1/users/#{usr.user_id}/group_events", existing_group.to_json, req_header
-    _(last_response.status).must_equal 201
-    _(last_response.header['Location'].size).must_be :>, 0
+    it 'HAPPY: should be able to create new group' do
+      usr = CGroup2::User.first
+      existing_group = DATA[:groups][1]
 
-    created = JSON.parse(last_response.body)['data']['data']['attribute']
-    event = CGroup2::Group.first
+      req_header = { 'CONTENT_TYPE' => 'application/json' }
+      
+      post "/api/v1/users/#{usr.user_id}/group_events", existing_group.to_json, req_header
+      _(last_response.status).must_equal 201
+      _(last_response.header['Location'].size).must_be :>, 0
 
-    _(created['group_id']).must_equal event.group_id
-    _(created['title']).must_equal existing_group['title']
-    _(created['description']).must_equal existing_group['description']
-    _(created['limit_number']).must_equal existing_group['limit_number']
-    _(created['member_id']).must_equal existing_group['member_id']
+      created = JSON.parse(last_response.body)['data']['data']['attribute']
+      event = CGroup2::Group.first
+
+      _(created['group_id']).must_equal event.group_id
+      _(created['title']).must_equal existing_group['title']
+      _(created['description']).must_equal existing_group['description']
+      _(created['limit_number']).must_equal existing_group['limit_number']
+      _(created['member_id']).must_equal existing_group['member_id']
+    end
+
+    it 'SECURITY: should not create group events with mass assignment' do
+      bad_data = @event_data.clone
+      bad_data['created_at'] = '1999-01-01'
+      bad_data['updated_at'] = '2019-01-01'
+      post "api/v1/users/#{@user.user_id}/group_events",
+           bad_data.to_json, @req_header
+
+      _(last_response.status).must_equal 400
+      _(last_response.header['Location']).must_be_nil
+    end
   end
 end

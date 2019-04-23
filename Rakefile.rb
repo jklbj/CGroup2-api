@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rake/testtask'
+require './require_app'
 
 task :default => :spec
 
@@ -11,7 +12,7 @@ end
 
 desc 'Test all the specs'
 Rake::TestTask.new(:spec) do |t|
-  t.pattern = 'spec/*_spec.rb'
+  t.pattern = 'specs/**/*_spec.rb'
   t.warning = false
 end
 
@@ -36,7 +37,7 @@ end
 
 desc 'Run application console (pry)'
 task :console => :print_env do
-  sh 'pry -r ./spec/test_load_all'
+  sh 'pry -r ./specs/test_load_all'
 end
 
 namespace :db do
@@ -72,4 +73,12 @@ namespace :db do
 
   desc 'Delete and migrate again'
   task reset: [:drop, :migrate]
+end
+
+namespace :newkey do
+  desc 'Create sample cryptographic key for database'
+  task :db do
+    require_app('lib')
+    puts "DB_KEY: #{SecureDB.generate_key}"
+  end
 end

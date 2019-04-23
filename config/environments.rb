@@ -2,6 +2,7 @@
 
 require 'roda'
 require 'econfig'
+require './app/lib/secure_db'
 
 module CGroup2
   # Configuration for the API
@@ -15,7 +16,7 @@ module CGroup2
     configure :development, :test do
       # Allows running reload! in pry to restart entire app
       def self.reload!
-        exec 'pry -r ./spec/test_load_all'
+        exec 'pry -r ./specs/test_load_all'
       end
     end
 
@@ -35,7 +36,7 @@ module CGroup2
         DB
       end
       
-      endSecureDB.setup(config) # Load crypto keys
+      SecureDB.setup(config) # Load crypto keys
     end
   end
 end

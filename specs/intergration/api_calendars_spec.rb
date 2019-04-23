@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './spec_helper'
+require_relative '../spec_helper'
 
 describe 'Test Document Handling' do
   include Rack::Test::Methods
@@ -49,24 +49,43 @@ describe 'Test Document Handling' do
 
     _(last_response.status).must_equal 404
   end
+  
+  describe 'Creating calendar event' do
+    before do
+      @user = CGroup2::User.first
+      @event_data = DATA[:calendars][1]
+      @req_header = { 'CONTENT_TYPE' => 'application/json' }
+    end
 
-  it 'HAPPY: should be able to create new calendar event' do
-    usr = CGroup2::User.first
-    event_data = DATA[:calendars][1]
+    it 'HAPPY: should be able to create new calendar event' do
+      usr = CGroup2::User.first
+      event_data = DATA[:calendars][1]
 
-    req_header = { 'CONTENT_TYPE' => 'application/json' }
-    post "api/v1/users/#{usr.user_id}/calendar_events",
-         event_data.to_json, req_header
-    _(last_response.status).must_equal 201
-    _(last_response.header['Location'].size).must_be :>, 0
+      req_header = { 'CONTENT_TYPE' => 'application/json' }
+      post "api/v1/users/#{usr.user_id}/calendar_events",
+          event_data.to_json, req_header
+      _(last_response.status).must_equal 201
+      _(last_response.header['Location'].size).must_be :>, 0
 
-    created = JSON.parse(last_response.body)['data']['data']['attribute']
-    event = CGroup2::Calendar.first
+      created = JSON.parse(last_response.body)['data']['data']['attribute']
+      event = CGroup2::Calendar.first
 
-    _(created['calendar_id']).must_equal event.calendar_id
-    _(created['title']).must_equal event_data['title']
-    _(created['description']).must_equal event_data['description']
-    # _(created['event_start_at']).must_equal event_data['event_start_at']
-    # _(created['event_end_at']).must_equal event_data['event_end_at']
+      _(created['calendar_id']).must_equal event.calendar_id
+      _(created['title']).must_equal event_data['title']
+      _(created['description']).must_equal event_data['description']
+      # _(created['event_start_at']).must_equal event_data['event_start_at']
+      # _(created['event_end_at']).must_equal event_data['event_end_at']
+    end
+
+    it 'SECURITY: should not create calendar events with mass assignment' do
+      bad_data = @event_data.clone
+      bad_data['created_at'] = '1999-01-01'
+      bad_data['updated_at'] = '2019-01-01'
+      post "api/v1/users/#{@user.user_id}/calendar_events",
+           bad_data.to_json, @req_header
+
+      _(last_response.status).must_equal 400
+      _(last_response.header['Location']).must_be_nil
+    end
   end
 end
