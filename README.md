@@ -20,7 +20,8 @@ All routes return Json
 - POST `api/v1/users/[ID]/calendar_events/`: creates a new event
 
 ###  group event information
-- GET `api/v1/users/[ID]/group_events/`: returns all group event IDs
+- GET `api/v1/group_events/`: returns all group event IDs
+- GET `api/v1/users/[ID]/group_events/`: returns all group event of certain user
 - GET `api/v1/users/[ID]/group_events/[ID]`: returns details about a single group event with given ID
 - POST `api/v1/users/[ID]/group_events/`: creates a new group event
 
