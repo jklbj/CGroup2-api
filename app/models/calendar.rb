@@ -10,10 +10,7 @@ module CGroup2
 
         plugin :timestamps
         plugin :whitelist_security
-        set_allowed_columns :title, :relative_path, :description, :content
-        set_allowed_columns :description, :relative_path, :description, :content
-        set_allowed_columns :event_start_at, :relative_path, :description, :content
-        set_allowed_columns :event_end_at, :relative_path, :description, :content
+        set_allowed_columns :title, :description, :description, :event_start_at, :event_end_at
 
         # rubocop:disable MethodLength
         def to_json(options = {})
