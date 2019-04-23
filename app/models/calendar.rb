@@ -9,6 +9,11 @@ module CGroup2
         many_to_one :user
 
         plugin :timestamps
+        plugin :whitelist_security
+        set_allowed_columns :title, :relative_path, :description, :content
+        set_allowed_columns :description, :relative_path, :description, :content
+        set_allowed_columns :event_start_at, :relative_path, :description, :content
+        set_allowed_columns :event_end_at, :relative_path, :description, :content
 
         # rubocop:disable MethodLength
         def to_json(options = {})

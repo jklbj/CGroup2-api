@@ -13,8 +13,8 @@ Sequel.migration do
 
       DateTime :event_start_at
       DateTime :event_end_at
-      DateTime :created_at
-      DateTime :updated_at
+      DateTime :created_at                  #blacklist
+      DateTime :updated_at                  #blacklist
 
       unique [:user_id, :calendar_id]
     end

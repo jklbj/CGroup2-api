@@ -34,6 +34,8 @@ module CGroup2
       def self.DB # rubocop:disable Naming/MethodName
         DB
       end
+      
+      endSecureDB.setup(config) # Load crypto keys
     end
   end
 end
