@@ -10,9 +10,9 @@ Sequel.migration do
       
       Integer :limit_number, null: false  
 
-      String :title, null: false
-      String :description, text: true
-      String :member_id
+      String :title_secure, null: false
+      String :description_secure, text: true
+      String :member_id_secure
       
       DateTime :due_at
       DateTime :event_start_at

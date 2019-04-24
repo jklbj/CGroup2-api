@@ -8,8 +8,8 @@ Sequel.migration do
       primary_key :calendar_id
       foreign_key :user_id, table: :users
 
-      String :title, null: false
-      String :description, text: true
+      String :title_secure, null: false
+      String :description_secure, text: true
 
       DateTime :event_start_at
       DateTime :event_end_at

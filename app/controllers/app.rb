@@ -45,14 +45,13 @@ module CGroup2
 								usr = User.first(user_id: user_id)
 								new_event = usr.add_calendar(new_data)
 
-								if new_event
-									response.status = 201
-									response['Location'] = "#{@cal_route}/#{new_event.calendar_id}"
-									{ message: 'calendar event saved', data: new_event }.to_json
-								else
-									routing.halt 400, { message: 'Could not save calendar event' }.to_json
-								end
 							
+								response.status = 201
+								response['Location'] = "#{@cal_route}/#{new_event.calendar_id}"
+								{ message: 'calendar event saved', data: new_event }.to_json
+								
+							rescue Sequel::MassAssignmentRestriction
+                routing.halt 400, { message: 'Illegal Request' }.to_json
 							rescue StandardError
                 routing.halt 500, { message: 'Database error' }.to_json
 							end
@@ -83,15 +82,13 @@ module CGroup2
 								new_data = JSON.parse(routing.body.read)
 								usr = User.first(user_id: user_id)
 								new_event = usr.add_group(new_data)
-
-								if new_event
-									response.status = 201
-									response['Location'] = "#{@grp_route}/#{new_event.group_id}"
-									{ message: 'group event saved', data: new_event }.to_json
-								else
-									routing.halt 400, { message: 'Could not save group event' }.to_json
-								end
-							
+								raise 'Could not save group event' unless new_event
+								
+								response.status = 201
+								response['Location'] = "#{@grp_route}/#{new_event.group_id}"
+								{ message: 'group event saved', data: new_event }.to_json
+							rescue Sequel::MassAssignmentRestriction
+                routing.halt 400, { message: 'Illegal Request' }.to_json	
 							rescue StandardError
                 routing.halt 500, { message: 'Database error' }.to_json
 							end
@@ -119,7 +116,6 @@ module CGroup2
 						new_data = JSON.parse(routing.body.read)
 						new_user = User.new(new_data)
 						raise('Could not save project') unless new_user.save
-						puts "wqweqweqwe:#{new_user}"
 
 						response.status = 201
             response['Location'] = "#{@usr_route}/#{new_user.user_id}"

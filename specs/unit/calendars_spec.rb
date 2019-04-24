@@ -18,7 +18,7 @@ describe 'Test Calendar Handling' do
     user = CGroup2::User.first
     new_event = user.add_calendar(event_data)
 
-    calendar_event = CGroup2::Calendar.find(id: new_event.calendar_id)
+    calendar_event = CGroup2::Calendar.find(calendar_id: new_event.calendar_id)
     _(calendar_event.title).must_equal new_event.title
     _(calendar_event.description).must_equal new_event.description
     _(calendar_event.event_start_at).must_equal new_event.event_start_at

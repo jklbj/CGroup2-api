@@ -18,7 +18,7 @@ describe 'Test group Handling' do
     user = CGroup2::User.first
     new_event = user.add_group(event_data)
 
-    group_event = CGroup2::Group.find(id: new_event.group_id)
+    group_event = CGroup2::Group.find(group_id: new_event.group_id)
     _(group_event.title).must_equal new_event.title
     _(group_event.description).must_equal new_event.description
     _(group_event.event_start_at).must_equal new_event.event_start_at

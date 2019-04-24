@@ -28,22 +28,6 @@ module CGroup2
         def description=(plaintext)
             self.description_secure = SecureDB.encrypt(plaintext)
         end
-    
-        def event_start_at
-            SecureDB.decrypt(event_start_at_secure)
-        end
-    
-        def event_start_at=(plaintext)
-            self.event_start_at_secure = SecureDB.encrypt(plaintext)
-        end
-
-        def event_end_at
-            SecureDB.decrypt(event_end_at_secure)
-        end
-    
-        def event_end_at=(plaintext)
-            self.event_end_at_secure = SecureDB.encrypt(plaintext)
-        end
 
         # rubocop:disable MethodLength
         def to_json(options = {})
