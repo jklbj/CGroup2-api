@@ -8,18 +8,18 @@ describe 'Test Document Handling' do
   before do 
     wipe_database
 
-    DATA[:users].each do |user_data|
-      CGroup2::User.create(user_data)
+    DATA[:accounts].each do |account_data|
+      CGroup2::Account.create(account_data)
     end
   end
     
   it 'HAPPY: should be able to get list of all calendar events' do
-    usr = CGroup2::User.first
+    usr = CGroup2::Account.first
     DATA[:calendars].each do |event|
       usr.add_calendar(event)
     end
 
-    get "api/v1/users/#{usr.user_id}/calendar_events"
+    get "api/v1/accounts/#{usr.account_id}/calendar_events"
     _(last_response.status).must_equal 200
 
     result = JSON.parse last_response.body
@@ -28,10 +28,10 @@ describe 'Test Document Handling' do
 
   it 'HAPPY: should be able to get details of a single calendar event' do
     event_data = DATA[:calendars][1]
-    usr = CGroup2::User.first
+    usr = CGroup2::Account.first
     event = usr.add_calendar(event_data).save
 
-    get "/api/v1/users/#{usr.user_id}/calendar_events/#{event.calendar_id}"
+    get "/api/v1/accounts/#{usr.account_id}/calendar_events/#{event.calendar_id}"
     _(last_response.status).must_equal 200
 
     result_attribute = JSON.parse(last_response.body)['data']['attribute']
@@ -44,25 +44,25 @@ describe 'Test Document Handling' do
   end
 
   it 'SAD: should return error if unknown calendar event requested' do
-    usr = CGroup2::User.first
-    get "/api/v1/users/#{usr.user_id}/calendar_events/foobar"
+    usr = CGroup2::Account.first
+    get "/api/v1/accounts/#{usr.account_id}/calendar_events/foobar"
 
     _(last_response.status).must_equal 404
   end
   
   describe 'Creating calendar event' do
     before do
-      @user = CGroup2::User.first
+      @account = CGroup2::Account.first
       @event_data = DATA[:calendars][1]
       @req_header = { 'CONTENT_TYPE' => 'application/json' }
     end
 
     it 'HAPPY: should be able to create new calendar event' do
-      usr = CGroup2::User.first
+      usr = CGroup2::Account.first
       event_data = DATA[:calendars][1]
 
       req_header = { 'CONTENT_TYPE' => 'application/json' }
-      post "api/v1/users/#{usr.user_id}/calendar_events",
+      post "api/v1/accounts/#{usr.account_id}/calendar_events",
           event_data.to_json, req_header
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
@@ -81,7 +81,7 @@ describe 'Test Document Handling' do
       bad_data = @event_data.clone
       bad_data['created_at'] = '1999-01-01'
       bad_data['updated_at'] = '2019-01-01'
-      post "api/v1/users/#{@user.user_id}/calendar_events",
+      post "api/v1/accounts/#{@account.account_id}/calendar_events",
            bad_data.to_json, @req_header
 
       _(last_response.status).must_equal 400

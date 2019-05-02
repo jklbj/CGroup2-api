@@ -63,7 +63,7 @@ describe 'Test Account Handling' do
       account = CGroup2::Account.first
 
       _(created['account_id']).must_equal account.id
-      _(created['username']).must_equal @account_data['username']
+      _(created['name']).must_equal @account_data['name']
       _(created['email']).must_equal @account_data['email']
       _(account.password?(@account_data['password'])).must_equal true
       _(account.password?('not_really_the_password')).must_equal false
