@@ -1,0 +1,8 @@
+---
+  - username: 'JeffHsu'
+    group_name:
+      - 'sell cookies'
+  - username: 'KevinYang'
+    group_name:
+      - 'sell candies'
+      - 'sell anything'

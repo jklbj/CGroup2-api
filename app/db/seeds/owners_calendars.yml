@@ -1,0 +1,8 @@
+---
+  - username: 'JeffHsu'
+    cal_name:
+      - 'buy cookies'
+  - username: 'KevinYang'
+    cal_name:
+      - 'buy candies'
+      - 'buy anything'
