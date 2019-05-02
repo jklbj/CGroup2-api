@@ -98,6 +98,7 @@ module CGroup2
 						routing.get do
 							usr = Account.first(name: account_id)
 							usr ? usr.to_json : raise('Account not found')
+							print("123")
 						rescue StandardError => error
 							routing.halt 404, { message: error.message }.to_json
 						end
