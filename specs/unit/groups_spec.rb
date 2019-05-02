@@ -8,15 +8,15 @@ describe 'Test group Handling' do
   before do
     wipe_database
 
-    DATA[:users].each do |user_data|
-      CGroup2::User.create(user_data)
+    DATA[:accounts].each do |account_data|
+      CGroup2::Account.create(account_data)
     end
   end
 
   it 'HAPPY: should retrieve correct data from database' do
     event_data = DATA[:groups][1]
-    user = CGroup2::User.first
-    new_event = user.add_group(event_data)
+    account = CGroup2::Account.first
+    new_event = Account.add_group(event_data)
 
     group_event = CGroup2::Group.find(group_id: new_event.group_id)
     _(group_event.title).must_equal new_event.title
@@ -27,8 +27,8 @@ describe 'Test group Handling' do
 
   it 'SECURITY: should secure sensitive attributes' do
     event_data = DATA[:groups][1]
-    user = CGroup2::User.first
-    new_event = user.add_group(event_data)
+    account = CGroup2::Account.first
+    new_event = Account.add_group(event_data)
     stored_event = app.DB[:groups].first
 
     _(stored_event[:title_secure]).wont_equal new_event.title

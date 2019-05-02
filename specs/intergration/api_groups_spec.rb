@@ -8,18 +8,18 @@ describe 'Test Document Handling' do
   before do 
     wipe_database
 
-    DATA[:users].each do |user_data|
-      CGroup2::User.create(user_data)
+    DATA[:accounts].each do |account_data|
+      CGroup2::Account.create(account_data)
     end
   end
 
   it 'HAPPY: should be able to get list of all group' do
-    usr = CGroup2::User.first
+    usr = CGroup2::Account.first
     DATA[:groups].each do |group|
       usr.add_group(group)
     end
 
-    get "api/v1/users/#{usr.user_id}/group_events"
+    get "api/v1/accounts/#{usr.account_id}/group_events"
     _(last_response.status).must_equal 200
     
     
@@ -29,10 +29,10 @@ describe 'Test Document Handling' do
 
   it 'HAPPY: should be able to get details of a single group' do
     existing_group = DATA[:groups][1]
-    usr = CGroup2::User.first
+    usr = CGroup2::Account.first
     event = usr.add_group(existing_group).save
 
-    get "/api/v1/users/#{usr.user_id}/group_events/#{event.group_id}"
+    get "/api/v1/accounts/#{usr.account_id}/group_events/#{event.group_id}"
     _(last_response.status).must_equal 200
 
     result_attribute = JSON.parse(last_response.body)['data']['attribute']
@@ -45,26 +45,26 @@ describe 'Test Document Handling' do
   end
 
   it 'SAD: should return error if unknown group requested' do
-    usr = CGroup2::User.first
-    get "/api/v1/users/#{usr.user_id}/group_events/foobar"
+    usr = CGroup2::Account.first
+    get "/api/v1/accounts/#{usr.account_id}/group_events/foobar"
 
     _(last_response.status).must_equal 404
   end
 
   describe 'Creating group event' do
     before do
-      @user = CGroup2::User.first
+      @account = CGroup2::Account.first
       @event_data = DATA[:groups][1]
       @req_header = { 'CONTENT_TYPE' => 'application/json' }
     end
 
     it 'HAPPY: should be able to create new group' do
-      usr = CGroup2::User.first
+      usr = CGroup2::Account.first
       existing_group = DATA[:groups][1]
 
       req_header = { 'CONTENT_TYPE' => 'application/json' }
       
-      post "/api/v1/users/#{usr.user_id}/group_events", existing_group.to_json, req_header
+      post "/api/v1/accounts/#{usr.account_id}/group_events", existing_group.to_json, req_header
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
 
@@ -82,7 +82,7 @@ describe 'Test Document Handling' do
       bad_data = @event_data.clone
       bad_data['created_at'] = '1999-01-01'
       bad_data['updated_at'] = '2019-01-01'
-      post "api/v1/users/#{@user.user_id}/group_events",
+      post "api/v1/accounts/#{@account.account_id}/group_events",
            bad_data.to_json, @req_header
 
       _(last_response.status).must_equal 400
