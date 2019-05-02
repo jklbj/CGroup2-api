@@ -11,8 +11,8 @@ Sequel.seed(:development) do
   
   require 'yaml'
   DIR = File.dirname(__FILE__)
-  ACCOUNTS_INFO = YAML.load_file("#{DIR}/accounts_seeds.yml")
-  CALENDAR_INFO = YAML.load_file("#{DIR}/calenders_seeds.yml")
+  ACCOUNTS_INFO = YAML.load_file("#{DIR}/account_seeds.yml")
+  CALENDAR_INFO = YAML.load_file("#{DIR}/calendar_seeds.yml")
   GROUP_INFO = YAML.load_file("#{DIR}/group_seeds.yml")
   OWNER_CAL_INFO = YAML.load_file("#{DIR}/owners_calendars.yml")
   OWNER_GROUP_INFO = YAML.load_file("#{DIR}/owners_groups.yml")
@@ -25,11 +25,11 @@ Sequel.seed(:development) do
   
   def create_owned_calendars
     OWNER_CAL_INFO.each do |owner_cal|
-      account = CGroup2::Account.first(username: owner_cal['username'])
+      account = CGroup2::Account.first(name: owner_cal['username'])
       owner_cal['cal_name'].each do |cal_name|
         cal_data = CALENDAR_INFO.find { |cal| cal['title'] == cal_name }
         CGroup2::CreateCalendarForOwner.call(
-          owner_id: account.id, cal_data: cal_data
+          owner_id: account.account_id, calendar_data: cal_data
         )
       end
     end
@@ -37,14 +37,14 @@ Sequel.seed(:development) do
   
   def create_owned_groups
     OWNER_GROUP_INFO.each do |owner_group|
-      account = CGroup2::Account.first(username: owner_group['username'])
+      account = CGroup2::Account.first(name: owner_group['username'])
       owner_group['group_name'].each do |group_name|
         group_data = GROUP_INFO.find { |group| group['title'] == group_name }
         CGroup2::CreateGroupForOwner.call(
-          owner_id: account.id, group_data: group_data
+          owner_id: account.account_id, group_data: group_data
         )
       end
     end
   end
-end
+
   

@@ -6,8 +6,8 @@ require_relative './password'
 
 module CGroup2
   # Models a project
-  class account < Sequel::Model
-    one_to_many :groups,
+  class Account < Sequel::Model
+    one_to_many :groups
     one_to_many :calendars
     plugin :association_dependencies, groups: :destroy, calendars: :destroy
 

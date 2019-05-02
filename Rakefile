@@ -50,7 +50,7 @@ namespace :db do
   require 'sequel'
 
   Sequel.extension :migration
-  app = Credence::Api
+  app = CGroup2::Api
 
   desc 'Run migrations'
   task :migrate => :print_env do
@@ -81,7 +81,7 @@ namespace :db do
 
   task :reset_seeds => [:load_models] do
     app.DB[:schema_seeds].delete if app.DB.tables.include?(:schema_seeds)
-    Credence::Account.dataset.destroy
+    CGroup2::Account.dataset.destroy
   end
 
   desc 'Seeds the development database'
