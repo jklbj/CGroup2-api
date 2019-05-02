@@ -16,6 +16,11 @@ Rake::TestTask.new(:spec) do |t|
   t.warning = false
 end
 
+desc 'Rerun tests on live code changes'
+task :respec do
+  sh 'rerun -c rake spec'
+end
+
 desc 'Runs rubocop on tested code'
 task :style do
   sh 'rubocop .'
@@ -41,11 +46,11 @@ task :console => :print_env do
 end
 
 namespace :db do
-  require_relative 'config/environments.rb' # load config info
+  require_app(nil) # loads config code files only
   require 'sequel'
 
   Sequel.extension :migration
-  app = CGroup2::Api
+  app = Credence::Api
 
   desc 'Run migrations'
   task :migrate => :print_env do
@@ -55,9 +60,8 @@ namespace :db do
 
   desc 'Delete database'
   task :delete do
-    app.DB[:user].delete
-    app.DB[:calendar].delete
-    app.DB[:group].delete
+    app.DB[:documents].delete
+    app.DB[:projects].delete
   end
 
   desc 'Delete dev or test database file'
@@ -71,8 +75,25 @@ namespace :db do
     puts "Deleted #{app.config.DB_FILENAME}"
   end
 
-  desc 'Delete and migrate again'
-  task reset: [:drop, :migrate]
+  task :load_models do
+    require_app(%w[lib models services])
+  end
+
+  task :reset_seeds => [:load_models] do
+    app.DB[:schema_seeds].delete if app.DB.tables.include?(:schema_seeds)
+    Credence::Account.dataset.destroy
+  end
+
+  desc 'Seeds the development database'
+  task :seed => [:load_models] do
+    require 'sequel/extensions/seed'
+    Sequel::Seed.setup(:development)
+    Sequel.extension :seed
+    Sequel::Seeder.apply(app.DB, 'app/db/seeds')
+  end
+
+  desc 'Delete all data and reseed'
+  task reseed: [:reset_seeds, :seed]
 end
 
 namespace :newkey do
