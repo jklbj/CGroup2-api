@@ -43,7 +43,7 @@ module CGroup2
                             event_end_at: event_end_at
                         }
                     },
-                    include: {
+                    included: {
                         account: account
                     }           
                 }, options
