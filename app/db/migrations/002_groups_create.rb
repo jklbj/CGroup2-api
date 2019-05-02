@@ -6,7 +6,7 @@ Sequel.migration do
   change do
     create_table(:groups) do
       primary_key :group_id
-      foreign_key :user_id, table: :users
+      foreign_key :account_id, table: :accounts
       
       Integer :limit_number, null: false  
 
@@ -20,7 +20,7 @@ Sequel.migration do
       DateTime :created_at                  #blacklist
       DateTime :updated_at                  #blacklist
 
-      unique [:user_id, :group_id]
+      unique [:account_id, :group_id]
     end
   end
 end

@@ -4,8 +4,8 @@ require 'sequel'
 
 Sequel.migration do
   change do
-    create_table(:users) do
-      primary_key :user_id
+    create_table(:accounts) do
+      primary_key :account_id
 
       String :name, unique: true, null: false
       String :email, unique: true, null: false

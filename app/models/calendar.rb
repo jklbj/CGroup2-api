@@ -6,7 +6,7 @@ require 'sequel'
 module CGroup2 
     # Models a secret document
     class Calendar < Sequel::Model
-        many_to_one :user
+        many_to_one :account
 
         plugin :timestamps
         plugin :whitelist_security
@@ -44,7 +44,7 @@ module CGroup2
                         }
                     },
                     include: {
-                        user: user
+                        account: account
                     }           
                 }, options
             )

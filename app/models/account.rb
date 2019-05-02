@@ -5,7 +5,7 @@ require 'sequel'
 
 module CGroup2
   # Models a project
-  class User < Sequel::Model
+  class account < Sequel::Model
     one_to_many :groups
     one_to_many :calendars
     plugin :association_dependencies, groups: :destroy, calendars: :destroy
@@ -17,9 +17,9 @@ module CGroup2
       JSON(
         {
           data: {
-            type: 'user',
+            type: 'account',
             attributes: {
-              user_id: user_id,
+              account_id: account_id,
               name: name,
               sex: sex,
               email: email,
