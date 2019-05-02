@@ -96,7 +96,7 @@ module CGroup2
 
 						# GET api/v1/accounts/[name]
 						routing.get do
-							usr = Account.first(name: name)
+							usr = Account.first(name: account_id)
 							usr ? usr.to_json : raise('Account not found')
 						rescue StandardError => error
 							routing.halt 404, { message: error.message }.to_json
