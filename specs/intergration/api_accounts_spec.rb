@@ -11,8 +11,8 @@ describe 'Test Account Handling' do
   
   describe 'Account information' do
     it 'HAPPY: should be able to get list of all users' do
-      CGroup2::Acoount.create(DATA[:accounts][0]).save
-      CGroup2::Acoount.create(DATA[:accounts][1]).save
+      CGroup2::Account.create(DATA[:accounts][0]).save
+      CGroup2::Account.create(DATA[:accounts][1]).save
 
       get "api/v1/accounts"
       _(last_response.status).must_equal 200
@@ -22,7 +22,7 @@ describe 'Test Account Handling' do
     end
 
     it 'HAPPY: should be able to get details of a single user' do
-      account_data = DATA[:acoounts][1]
+      account_data = DATA[:acounts][1]
       CGroup2::Account.create(account_data).save
       account = CGroup2::Account.first
 
