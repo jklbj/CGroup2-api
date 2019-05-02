@@ -16,33 +16,33 @@ module CGroup2
 
       @api_root = 'api/v1'
       routing.on @api_root do
-				routing.on 'users' do
-					@usr_route = "#{@api_root}/users"
+				routing.on 'accounts' do
+					@usr_route = "#{@api_root}/accounts"
 
-					routing.on String do |user_id|
+					routing.on String do |account_id|
 						
 						routing.on 'calendar_events' do
-							@cal_route = "#{@api_root}/users/#{user_id}/calendar_events"
-							# GET api/v1/users/[user_id]/calendar_events/[calendar_id]
+							@cal_route = "#{@api_root}/accounts/#{account_id}/calendar_events"
+							# GET api/v1/accounts/[account_id]/calendar_events/[calendar_id]
 							routing.get String do |cal_id|
 							
-								cal = Calendar.where(user_id: user_id, calendar_id: cal_id).first
+								cal = Calendar.where(account_id: account_id, calendar_id: cal_id).first
 					      cal ? cal.to_json : raise('Calender event not found')
 							rescue StandardError => e
 								routing.halt 404, { message: e.message }.to_json
 							end
 						
 
-							# GET api/v1/users/[user_id]/calender_events
+							# GET api/v1/accounts/[account_id]/calender_events
 							routing.get do
 								output = { calendar_ids: Calendar.all }
 								JSON.pretty_generate(output)
 							end
 
-						  # POST api/v1/users/[user_id]/calender_events
+						  # POST api/v1/accounts/[account_id]/calender_events
 							routing.post do
 								new_data = JSON.parse(routing.body.read)
-								usr = User.first(user_id: user_id)
+								usr = Account.first(account_id: account_id)
 								new_event = usr.add_calendar(new_data)
 
 							
@@ -58,12 +58,12 @@ module CGroup2
 						end
 				
 						routing.on 'group_events' do
-							@grp_route = "#{@api_root}/users/#{user_id}/group_events"
-							# GET api/v1/users/[user_id]/group_events/[group_id]
+							@grp_route = "#{@api_root}/accounts/#{account_id}/group_events"
+							# GET api/v1/accounts/[account_id]/group_events/[group_id]
 							
 							routing.get String do |grp_id|
 								
-								grp = Group.where(user_id: user_id, group_id: grp_id).first
+								grp = Group.where(account_id: account_id, group_id: grp_id).first
 								
 					      grp ? grp.to_json : raise('Group event not found')
 							rescue StandardError => e
@@ -71,16 +71,16 @@ module CGroup2
 							end
 						
 
-							# GET api/v1/users/[user_id]/group_events
+							# GET api/v1/accounts/[account_id]/group_events
 							routing.get do
 								output = { group_ids: Group.all }
 								JSON.pretty_generate(output)
 							end
 
-						  # POST api/v1/users/[user_id]/group_events
+						  # POST api/v1/accounts/[account_id]/group_events
 							routing.post do
 								new_data = JSON.parse(routing.body.read)
-								usr = User.first(user_id: user_id)
+								usr = Account.first(account_id: account_id)
 								new_event = usr.add_group(new_data)
 								raise 'Could not save group event' unless new_event
 								
@@ -94,34 +94,37 @@ module CGroup2
 							end
 						end
 
-						# GET api/v1/users/[user_id]
+						# GET api/v1/accounts/[name]
 						routing.get do
-							usr = User.first(user_id: user_id)
-							usr ? usr.to_json : raise('User not found')
+							usr = Account.first(name: name)
+							usr ? usr.to_json : raise('Account not found')
 						rescue StandardError => error
 							routing.halt 404, { message: error.message }.to_json
 						end
 					end
 						
-					# GET api/v1/users
+					# GET api/v1/accounts
 					routing.get do
-						output = { data: User.all }
+						output = { data: Account.all }
 						JSON.pretty_generate(output)
 					rescue StandardError
-						routing.halt 404, { message: 'Could not find users' }.to_json
+						routing.halt 404, { message: 'Could not find accounts' }.to_json
 					end
 
-					# POST api/v1/users
+					# POST api/v1/accounts
 					routing.post do
 						new_data = JSON.parse(routing.body.read)
-						new_user = User.new(new_data)
-						raise('Could not save project') unless new_user.save
+						new_account = Account.new(new_data)
+						raise('Could not save project') unless new_account.save
 
 						response.status = 201
-            response['Location'] = "#{@usr_route}/#{new_user.user_id}"
-            { message: 'User saved', data: new_user }.to_json
+            response['Location'] = "#{@usr_route}/#{new_account.account_id}"
+            { message: 'Account saved', data: new_account }.to_json
 					rescue StandardError => error
 						routing.halt 400, { message: error.message }.to_json
+					rescue StandardError => e
+            puts e.inspect
+            routing.halt 500, { message: error.message }.to_json
 					end
 				end
 				
