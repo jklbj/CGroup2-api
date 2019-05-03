@@ -26,7 +26,8 @@ module CGroup2
 							# GET api/v1/accounts/[account_id]/calendar_events/[calendar_id]
 							routing.get String do |cal_id|
 							
-								cal = Calendar.where(account_id: account_id, calendar_id: cal_id).first
+								acc_id = Account.where(name: account_id).first.account_id
+								cal = Calendar.where(account_id: acc_id, calendar_id: cal_id).first
 					      cal ? cal.to_json : raise('Calender event not found')
 							rescue StandardError => e
 								routing.halt 404, { message: e.message }.to_json
@@ -42,9 +43,8 @@ module CGroup2
 						  # POST api/v1/accounts/[account_id]/calender_events
 							routing.post do
 								new_data = JSON.parse(routing.body.read)
-								usr = Account.first(account_id: account_id)
+								usr = Account.first(name: account_id)
 								new_event = usr.add_calendar(new_data)
-
 							
 								response.status = 201
 								response['Location'] = "#{@cal_route}/#{new_event.calendar_id}"
@@ -62,9 +62,8 @@ module CGroup2
 							# GET api/v1/accounts/[account_id]/group_events/[group_id]
 							
 							routing.get String do |grp_id|
-								
-								grp = Group.where(account_id: account_id, group_id: grp_id).first
-								
+								acc_id = Account.where(name: account_id).first.account_id
+								grp = Group.where(account_id: acc_id, group_id: grp_id).first
 					      grp ? grp.to_json : raise('Group event not found')
 							rescue StandardError => e
 								routing.halt 404, { message: e.message }.to_json
@@ -80,7 +79,7 @@ module CGroup2
 						  # POST api/v1/accounts/[account_id]/group_events
 							routing.post do
 								new_data = JSON.parse(routing.body.read)
-								usr = Account.first(account_id: account_id)
+								usr = Account.first(name: account_id)
 								new_event = usr.add_group(new_data)
 								raise 'Could not save group event' unless new_event
 								
@@ -98,7 +97,6 @@ module CGroup2
 						routing.get do
 							usr = Account.first(name: account_id)
 							usr ? usr.to_json : raise('Account not found')
-							print("123")
 						rescue StandardError => error
 							routing.halt 404, { message: error.message }.to_json
 						end

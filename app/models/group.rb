@@ -6,7 +6,7 @@ require 'sequel'
 module CGroup2 
     # Models a secret document
     class Group < Sequel::Model
-        many_to_one :accounts
+        many_to_one :account
 
         plugin :timestamps
         plugin :whitelist_security

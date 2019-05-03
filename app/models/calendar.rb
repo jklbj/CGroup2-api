@@ -6,7 +6,7 @@ require 'sequel'
 module CGroup2 
     # Models a secret document
     class Calendar < Sequel::Model
-        many_to_one :accounts
+        many_to_one :account, class: :'CGroup2::Account'
 
         plugin :timestamps
         plugin :whitelist_security
