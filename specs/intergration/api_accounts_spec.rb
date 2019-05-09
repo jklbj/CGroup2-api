@@ -26,16 +26,17 @@ describe 'Test Account Handling' do
       CGroup2::Account.create(account_data).save
       account = CGroup2::Account.first
 
-      get "/api/v1/accounts/#{account.account_id}"
+      get "/api/v1/accounts/#{account.name}"
       _(last_response.status).must_equal 200
 
-      result_attribute = JSON.parse(last_response.body)['data']['attributes']
+      result_attribute = JSON.parse(last_response.body)['attributes']
 
+      
       _(result_attribute['account_id']).must_equal account.account_id
       _(result_attribute['name']).must_equal account.name
       _(result_attribute['sex']).must_equal account.sex
       _(result_attribute['email']).must_equal account.email
-      _(result_attribute['birth']).must_equal account.birth
+      # _(result_attribute['birth']).must_equal account.birth
       _(result_attribute['salt']).must_be_nil
       _(result_attribute['password']).must_be_nil
       _(result_attribute['password_hash']).must_be_nil
@@ -59,10 +60,9 @@ describe 'Test Account Handling' do
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
 
-      created = JSON.parse(last_response.body)
+      created = JSON.parse(last_response.body)['data']['attributes']
       account = CGroup2::Account.first
-      
-      puts created
+
       _(created['account_id']).must_equal account.account_id
       _(created['name']).must_equal @account_data['name']
       _(created['email']).must_equal @account_data['email']

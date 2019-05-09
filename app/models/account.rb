@@ -12,6 +12,8 @@ module CGroup2
     plugin :association_dependencies, groups: :destroy, calendars: :destroy
 
     plugin :timestamps, update_on_create: true
+    plugin :whitelist_security
+    set_allowed_columns :account, :sex, :name, :email, :password, :birth
 
     def password=(new_password)
       self.password_digest = Password.digest(new_password)
@@ -26,17 +28,14 @@ module CGroup2
     def to_json(options = {})
       JSON(
         {
-          data: {
-            type: 'account',
-            attributes: {
-              account_id: account_id,
-              name: name,
-              sex: sex,
-              email: email,
-              account: account,
-              password_digest: password_digest,
-              birth: birth
-            }
+          type: 'account',
+          attributes: {
+            account_id: account_id,
+            name: name,
+            sex: sex,
+            email: email,
+            account: account,
+            birth: birth
           }
         }, options
       )
