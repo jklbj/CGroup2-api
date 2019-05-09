@@ -44,6 +44,23 @@ describe 'Test Document Handling' do
     _(result_attribute['member_id']).must_equal existing_group['member_id']
   end
 
+  it 'HAPPY: should be able to get details of a single group by group id' do
+    existing_group = DATA[:groups][1]
+    usr = CGroup2::Account.first
+    event = usr.add_group(existing_group).save
+
+    get "/api/v1/group_events/#{event.group_id}"
+    _(last_response.status).must_equal 200
+
+    result_attribute = JSON.parse(last_response.body)['data']['attribute']
+
+    _(result_attribute['group_id']).must_equal event.group_id
+    _(result_attribute['title']).must_equal existing_group['title']
+    _(result_attribute['description']).must_equal existing_group['description']
+    _(result_attribute['limit_number']).must_equal existing_group['limit_number']
+    _(result_attribute['member_id']).must_equal existing_group['member_id']
+  end
+
   it 'SAD: should return error if unknown group requested' do
     usr = CGroup2::Account.first
     get "/api/v1/accounts/#{usr.name}/group_events/foobar"
