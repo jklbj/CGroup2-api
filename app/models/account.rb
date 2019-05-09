@@ -18,7 +18,7 @@ module CGroup2
     end
 
     def password?(try_password)
-      digest = Credence::Password.from_digest(password_digest)
+      digest = CGroup2::Password.from_digest(password_digest)
       digest.correct?(try_password)
     end 
 
@@ -34,7 +34,7 @@ module CGroup2
               sex: sex,
               email: email,
               account: account,
-              password: password,
+              password_digest: password_digest,
               birth: birth
             }
           }

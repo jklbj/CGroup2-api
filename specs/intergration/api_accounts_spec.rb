@@ -22,7 +22,7 @@ describe 'Test Account Handling' do
     end
 
     it 'HAPPY: should be able to get details of a single user' do
-      account_data = DATA[:acounts][1]
+      account_data = DATA[:accounts][1]
       CGroup2::Account.create(account_data).save
       account = CGroup2::Account.first
 
@@ -59,10 +59,11 @@ describe 'Test Account Handling' do
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
 
-      created = JSON.parse(last_response.body)['data']
+      created = JSON.parse(last_response.body)
       account = CGroup2::Account.first
-
-      _(created['account_id']).must_equal account.id
+      
+      puts created
+      _(created['account_id']).must_equal account.account_id
       _(created['name']).must_equal @account_data['name']
       _(created['email']).must_equal @account_data['email']
       _(account.password?(@account_data['password'])).must_equal true
