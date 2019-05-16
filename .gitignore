@@ -1,2 +1,3 @@
+.bundle/
 config/secrets.yml
-app/db/store/*
+app/db/*.*
