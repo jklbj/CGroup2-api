@@ -45,6 +45,14 @@ task :console => :print_env do
   sh 'pry -r ./specs/test_load_all'
 end
 
+namespace :newkey do
+  desc 'Create sample cryptographic key for database'
+  task :db do
+    require_app('lib')
+    puts "DB_KEY: #{SecureDB.generate_key}"
+  end
+end
+
 namespace :db do
   require_app(nil) # loads config code files only
   require 'sequel'
@@ -60,8 +68,9 @@ namespace :db do
 
   desc 'Delete database'
   task :delete do
-    app.DB[:documents].delete
-    app.DB[:projects].delete
+    app.DB[:calendars].delete
+    app.DB[:groups].delete
+    app.DB[:accounts].delete
   end
 
   desc 'Delete dev or test database file'
@@ -96,10 +105,9 @@ namespace :db do
   task reseed: [:reset_seeds, :seed]
 end
 
-namespace :newkey do
-  desc 'Create sample cryptographic key for database'
-  task :db do
-    require_app('lib')
-    puts "DB_KEY: #{SecureDB.generate_key}"
+namespace :run do
+  # Run in development mode
+  task :dev do
+    sh 'rackup -p 3000'
   end
 end
