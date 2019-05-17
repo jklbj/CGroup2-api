@@ -34,7 +34,6 @@ module CGroup2
             name: name,
             sex: sex,
             email: email,
-            account: account,
             birth: birth
           }
         }, options

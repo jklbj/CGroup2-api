@@ -103,17 +103,18 @@ module CGroup2
       # POST api/v1/accounts
       routing.post do
         new_data = JSON.parse(routing.body.read)
+        puts "routnting body: #{new_data}"
         new_account = Account.new(new_data)
         raise('Could not save project') unless new_account.save
 
         response.status = 201
         response['Location'] = "#{@usr_route}/#{new_account.name}"
         { message: 'Account saved', data: new_account }.to_json
-      rescue StandardError => error
-        routing.halt 400, { message: error.message }.to_json
+      rescue Sequel::MassAssignmentRestriction
+        routing.halt 400, { message: 'Illegal Request' }.to_json
       rescue StandardError => e
         puts e.inspect
-        routing.halt 500, { message: error.message }.to_json
+        routing.halt 500, { message: e.message }.to_json
       end
     end
   end

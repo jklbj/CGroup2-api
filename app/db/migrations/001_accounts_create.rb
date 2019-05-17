@@ -9,7 +9,6 @@ Sequel.migration do
 
       String :name, unique: true, null: false
       String :email, unique: true, null: false
-      String :account, unique: true, null: false
       String :password_digest, null: false
       Fixnum :sex, fixed: true, null: false
 
