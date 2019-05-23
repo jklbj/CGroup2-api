@@ -13,7 +13,7 @@ module CGroup2
 
     plugin :timestamps, update_on_create: true
     plugin :whitelist_security
-    set_allowed_columns :account, :sex, :name, :email, :password, :birth
+    set_allowed_columns :sex, :name, :email, :password, :birth
 
     def password=(new_password)
       self.password_digest = Password.digest(new_password)

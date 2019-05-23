@@ -20,6 +20,9 @@ gem 'pry'
 gem 'hirb'
 gem 'sequel'
 
+# External Services
+gem 'http'
+
 group :development, :test do
   gem 'sequel-seed'
   gem 'sqlite3'

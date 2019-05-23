@@ -103,8 +103,9 @@ module CGroup2
       # POST api/v1/accounts
       routing.post do
         new_data = JSON.parse(routing.body.read)
-        puts "routnting body: #{new_data}"
+        puts "routing body: #{new_data}"
         new_account = Account.new(new_data)
+        puts "gooooooooooooooood"
         raise('Could not save project') unless new_account.save
 
         response.status = 201
