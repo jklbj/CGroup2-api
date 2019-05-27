@@ -105,7 +105,6 @@ module CGroup2
         new_data = JSON.parse(routing.body.read)
         puts "routing body: #{new_data}"
         new_account = Account.new(new_data)
-        puts "gooooooooooooooood"
         raise('Could not save project') unless new_account.save
 
         response.status = 201
