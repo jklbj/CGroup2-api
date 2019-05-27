@@ -14,7 +14,7 @@ describe 'Test group Handling' do
   end
 
   it 'HAPPY: should retrieve correct data from database' do
-    event_data = DATA[:groups][1]
+    event_data = DATA[:group_events][1]
     account = CGroup2::Account.first
     new_event = account.add_group(event_data)
 
@@ -26,7 +26,7 @@ describe 'Test group Handling' do
   end
 
   it 'SECURITY: should secure sensitive attributes' do
-    event_data = DATA[:groups][1]
+    event_data = DATA[:group_events][1]
     account = CGroup2::Account.first
     new_event = account.add_group(event_data)
     stored_event = app.DB[:groups].first

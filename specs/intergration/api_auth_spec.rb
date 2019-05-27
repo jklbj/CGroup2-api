@@ -21,7 +21,7 @@ describe 'Test Authentication Routes' do
                       password: @account_data['password'] }
       post 'api/v1/auth/authenticate', credentials.to_json, @req_header
 
-      auth_account = JSON.parse(last_response.body)['attributes']
+      auth_account = JSON.parse(last_response.body)['attributes']['account']['attributes']
       _(last_response.status).must_equal 200
       _(auth_account['name'].must_equal(@account_data['name']))
       _(auth_account['email'].must_equal(@account_data['email']))
@@ -29,9 +29,9 @@ describe 'Test Authentication Routes' do
     end
 
     it 'BAD: should not authenticate invalid password' do
-      credentials = { username: @account_data['name'],
+      credentials = { name: @account_data['name'],
                       password: 'fakepassword' }
-
+      
       assert_output(/invalid/i, '') do
         post 'api/v1/auth/authenticate', credentials.to_json, @req_header
       end
@@ -40,10 +40,7 @@ describe 'Test Authentication Routes' do
 
       _(last_response.status).must_equal 403
       _(result['message']).wont_be_nil
-      _(result['attributes']).must_be_nil
+      _(result['attribute']).must_be_nil
     end
   end
 end
-
-
-

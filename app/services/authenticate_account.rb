@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module CGroup2
+  # Find account and check password
+  class AuthenticateAccount
     # Error for invalid credentials
     class UnauthorizedError < StandardError
       def initialize(msg = nil)
@@ -11,15 +13,27 @@ module CGroup2
         "Invalid Credentials for: #{@credentials[:name]}"
       end
     end
-  
-    # Find account and check password
-    class AuthenticateAccount
-      def self.call(credentials)
-        account = Account.first(name: credentials[:name])
-        account.password?(credentials[:password]) ? account : raise
-      rescue StandardError
-        raise UnauthorizedError, credentials
+
+    def self.call(credentials)
+      account = Account.first(name: credentials[:name])
+      unless account.password?(credentials[:password])
+        raise(UnauthorizedError, credentials)
       end
+
+      account_and_token(account)
+    rescue StandardError
+      raise(UnauthorizedError, credentials)
+    end
+
+    def self.account_and_token(account)
+      {
+        type: 'authenticated_account',
+        attributes: {
+          account: account,
+          auth_token: AuthToken.create(account)
+        }
+      }
     end
   end
+end
   

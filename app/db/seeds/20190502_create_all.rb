@@ -25,7 +25,7 @@ Sequel.seed(:development) do
   
   def create_owned_calendars
     OWNER_CAL_INFO.each do |owner_cal|
-      account = CGroup2::Account.first(name: owner_cal['username'])
+      account = CGroup2::Account.first(name: owner_cal['name'])
       owner_cal['cal_name'].each do |cal_name|
         cal_data = CALENDAR_INFO.find { |cal| cal['title'] == cal_name }
         CGroup2::CreateCalendarForOwner.call(
@@ -37,7 +37,7 @@ Sequel.seed(:development) do
   
   def create_owned_groups
     OWNER_GROUP_INFO.each do |owner_group|
-      account = CGroup2::Account.first(name: owner_group['username'])
+      account = CGroup2::Account.first(name: owner_group['name'])
       owner_group['group_name'].each do |group_name|
         group_data = GROUP_INFO.find { |group| group['title'] == group_name }
         CGroup2::CreateGroupForOwner.call(
