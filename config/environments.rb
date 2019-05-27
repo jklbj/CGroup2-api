@@ -2,7 +2,7 @@
 
 require 'roda'
 require 'econfig'
-require './app/lib/secure_db'
+require_app('lib')
 
 module CGroup2
   # Configuration for the API
@@ -36,7 +36,8 @@ module CGroup2
         DB
       end
       
-      SecureDB.setup(config) # Load crypto keys
+      SecureDB.setup(config.DB_KEY) # Load crypto keys
+      AuthToken.setup(config.MSG_KEY) # Load crypto keys
     end
   end
 end

@@ -14,7 +14,7 @@ describe 'Test Calendar Handling' do
   end
 
   it 'HAPPY: should retrieve correct data from database' do
-    event_data = DATA[:calendars][1]
+    event_data = DATA[:calendar_events][1]
     account = CGroup2::Account.first
     new_event = account.add_calendar(event_data)
 
@@ -26,7 +26,7 @@ describe 'Test Calendar Handling' do
   end
 
   it 'SECURITY: should secure sensitive attributes' do
-    event_data = DATA[:calendars][1]
+    event_data = DATA[:calendar_events][1]
     account = CGroup2::Account.first
     new_event = account.add_calendar(event_data)
     stored_event = app.DB[:calendars].first

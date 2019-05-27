@@ -23,7 +23,7 @@ module CGroup2
     end
 
     def username_available?
-      Account.first(name: @registration[:username]).nil?
+      Account.first(name: @registration[:name]).nil?
     end
 
     def email_available?

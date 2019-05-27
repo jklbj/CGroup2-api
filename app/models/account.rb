@@ -5,15 +5,25 @@ require 'sequel'
 require_relative './password'
 
 module CGroup2
-  # Models a project
+  # Models a registered account
   class Account < Sequel::Model
-    one_to_many :groups
-    one_to_many :calendars
-    plugin :association_dependencies, groups: :destroy, calendars: :destroy
+    one_to_many :groups, class: :'CGroup2::Group', key: :account_id
+    one_to_many :calendars, class: :'CGroup2::Calendar', key: :account_id
+    plugin :association_dependencies, 
+           groups: :destroy, 
+           calendars: :destroy
 
     plugin :timestamps, update_on_create: true
     plugin :whitelist_security
     set_allowed_columns :sex, :name, :email, :password, :birth
+
+    def group_events
+      groups
+    end
+
+    def calendar_events
+      calendars
+    end
 
     def password=(new_password)
       self.password_digest = Password.digest(new_password)
@@ -39,6 +49,5 @@ module CGroup2
         }, options
       )
     end
-    # rubocop:enable MethodLength
   end
 end
