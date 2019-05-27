@@ -82,13 +82,6 @@ describe 'Test Calendar Handling' do
 
     it 'HAPPY: should be able to create new calendar events' do
       post 'api/v1/calendar_events', @cal_data.to_json, @req_header
-      
-      # puts "999999999999999999999999999"
-      # puts @cal_data
-      # puts "88888888888888888888888888888"
-      # puts @req_header
-      # puts "7777777777777777777777777777"
-      # puts last_response.body
 
       _(last_response.status).must_equal 201
       _(last_response.header['Location'].size).must_be :>, 0
