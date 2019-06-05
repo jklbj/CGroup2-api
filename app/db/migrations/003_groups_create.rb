@@ -12,7 +12,6 @@ Sequel.migration do
 
       String :title_secure, null: false
       String :description_secure, text: true
-      String :member_id_secure
       
       DateTime :due_at
       DateTime :event_start_at

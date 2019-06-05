@@ -22,8 +22,8 @@ module CGroup2
 
       #GET api/v1/calendar_events
       routing.get do
-        account = Account.first(name: @auth_account['name'])
-        calendar_events = account.calendar_events
+        calendar_events = @auth_account.calendar_events
+        puts "calendar: #{calendar_events}"
         JSON.pretty_generate(data: calendar_events)
       rescue StandardError
         routing.halt 403, { message: 'Could not find any calendar events'}.to_json

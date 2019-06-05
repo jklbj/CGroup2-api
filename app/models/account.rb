@@ -8,9 +8,14 @@ module CGroup2
   # Models a registered account
   class Account < Sequel::Model
     one_to_many :groups, class: :'CGroup2::Group', key: :account_id
+    many_to_many :participations,
+                 class: :'CGroup2::Group',
+                 join_table: :accounts_groups,
+                 left_key: :member_id, right_key: :group_id
     one_to_many :calendars, class: :'CGroup2::Calendar', key: :account_id
     plugin :association_dependencies, 
-           groups: :destroy, 
+           groups: :destroy,
+           participations: :nullify,
            calendars: :destroy
 
     plugin :timestamps, update_on_create: true
