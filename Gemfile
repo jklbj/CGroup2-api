@@ -15,6 +15,7 @@ gem 'rake'
 
 # Debugging
 gem 'pry'
+gem 'rack-test'
 
 # Database
 gem 'hirb'
@@ -49,6 +50,5 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rack-test'
   gem 'rerun'
 end

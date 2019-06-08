@@ -1,21 +1,18 @@
 ---
 - title: 'sell cookies'
   description: 'Gd1'
-  member_id: 'KD, LBJ'
   limit_number: 4
   due_at: '2019-04-21 12:13:40'
   event_start_at: '2019-04-20 12:13:40'
   event_end_at: '2019-05-01 10:00:00'
 - title: 'sell candies'
   description: 'Gd2'
-  member_id: 'KT, DW'
   limit_number: 3
   due_at: '2019-04-22 12:13:40'
   event_start_at: '2019-04-21 12:13:40'
   event_end_at: '2019-05-02 10:00:00'
 - title: 'sell anything'
   description: 'Gd3'
-  member_id: 'KT, KK'
   limit_number: 3
   due_at: '2019-04-12 12:13:40'
   event_start_at: '2019-04-25 12:13:40'

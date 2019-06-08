@@ -6,7 +6,15 @@ require 'sequel'
 module CGroup2 
   # Models a secret document
   class Group < Sequel::Model
-    many_to_one :account
+    many_to_one :account, class: :'CGroup2::Account'
+
+    many_to_many :members,
+                 class: :'CGroup2::Account',
+                 join_table: :accounts_groups,
+                 left_key: :group_id, right_key: :member_id
+
+    plugin :association_dependencies,
+    members: :nullify
 
     plugin :timestamps
     plugin :whitelist_security
@@ -27,15 +35,7 @@ module CGroup2
 
     def description=(plaintext)
         self.description_secure = SecureDB.encrypt(plaintext)
-    end
-
-    def member_id
-        SecureDB.decrypt(member_id_secure)
-    end
-
-    def member_id=(plaintext)
-        self.member_id_secure = SecureDB.encrypt(plaintext)
-    end
+    end 
 
     # rubocop:disable MethodLength
     def to_json(options = {})
@@ -47,7 +47,6 @@ module CGroup2
             title: title,
             description: description,
             limit_number: limit_number,
-            member_id: member_id,
             due_at: due_at,
             event_start_at: event_start_at,
             event_end_at: event_end_at            
