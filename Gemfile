@@ -21,6 +21,10 @@ gem 'rack-test'
 gem 'hirb'
 gem 'sequel'
 
+# Google
+gem 'google-api-client'
+gem 'signet', '~> 0.11.0'
+
 # External Services
 gem 'http'
 

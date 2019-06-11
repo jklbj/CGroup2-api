@@ -27,7 +27,7 @@ module CGroup2
       routing.get do
         group_events = @auth_account.groups
         JSON.pretty_generate(data: group_events)
-      rescue
+      rescue StandardError
         routing.halt 403, { message: 'Could not find any group events'}.to_json
       end
 

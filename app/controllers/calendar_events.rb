@@ -22,21 +22,20 @@ module CGroup2
 
       #GET api/v1/calendar_events
       routing.get do
-        calendar_events = @auth_account.calendar_events
-        puts "calendar: #{calendar_events}"
+        calendar_events = @auth_account.calendars
         JSON.pretty_generate(data: calendar_events)
-      rescue StandardError
+      rescue StandardError => e
+        puts "error message: #{e}"
         routing.halt 403, { message: 'Could not find any calendar events'}.to_json
       end
 
       #POST api/v1/calendar_events
       routing.post do
-        new_data = JSON.parse(routing.body.read)
-        new_cale = Calendar.new(new_data)
-        raise('Could not save calendar event') unless new_cale.save
-
+        auth_request = JsonRequestBody.parse_symbolize(request.body.read)
+        new_cale = AuthorizeSso.new(@auth_account, Api.config)
+                    .call(auth_request[:access_token])
         response.status = 201
-        response['Location'] = "#{@calendar_route}/#{new_cale.calendar_id}"
+        response['Location'] = "#{@calendar_route}"
         { message: 'Calendar events saved', data: new_cale }.to_json
       rescue Sequel::MassAssignmentRestriction
         routing.halt 400, { message: 'Illegal Request' }.to_json
