@@ -23,7 +23,6 @@ module CGroup2
       #GET api/v1/calendar_events
       routing.get do
         calendar_events = @auth_account.calendar_events
-        puts "calendar: #{calendar_events}"
         JSON.pretty_generate(data: calendar_events)
       rescue StandardError
         routing.halt 403, { message: 'Could not find any calendar events'}.to_json

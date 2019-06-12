@@ -38,7 +38,7 @@ module CGroup2
     end 
 
     # rubocop:disable MethodLength
-    def to_json(options = {})
+    def to_h(options = {})
       JSON(
         {
           type: 'group',
@@ -58,6 +58,19 @@ module CGroup2
       )
     end
     # rubocop:enable MethodLength
+
+    def full_details
+      to_h.merge(
+        relationships: {
+          account: account,
+          members: members
+        }
+      )
+    end
+
+    def to_json(options = {})
+      JSON(to_h, options)
+    end
   end
 end
             
