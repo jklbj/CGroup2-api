@@ -56,12 +56,13 @@ module CGroup2
     def find_or_create_calendar_events(calendar_events)
       database_calendar_events = @auth_account.calendars
       calendar_events.each do |event|
+        repeat = false
+        start = event.event_start_at
+        end_d = event.event_end_at
         database_calendar_events.each do |database_event|
-          start = database_event.event_start_at
-          end_d = database_event.event_end_at
-          @auth_account.add_calendar(event) unless (start == event.event_start_at && end_d == event.event_end_at) 
+          repeat = true if (start == database_event.event_start_at && end_d == database_event.event_end_at) 
         end
-        
+        @auth_account.add_calendar(event) unless repeat
       end
     end
 
