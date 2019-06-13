@@ -36,10 +36,9 @@ module CGroup2
 
         #DELETE api/v1/group_events/[grp_id]
         routing.delete do
-          req_data = JSON.parse(routing.body.read)
           group = DeleteGroup.call(
             req_username: @auth_account.name,
-            group_id: group_id
+            group_id: grp_id
           )
 
           { message: "#{group.title} deleted." }.to_json
