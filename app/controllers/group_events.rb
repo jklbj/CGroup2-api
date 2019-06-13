@@ -11,7 +11,7 @@ module CGroup2
       routing.halt(403, unauthorized_message) unless @auth_account
 
       @group_route = "#{@api_root}/group_events"
-      routing.get String do |grp_id|
+      routing.on String do |grp_id|
         @req_group = Group.first(group_id: grp_id)
 
         #GET api/v1/group_events/[grp_id]
@@ -22,7 +22,6 @@ module CGroup2
             group = GetGroupQuery.call(
               account: @auth_account, group: @req_group
             )
-            puts "gr: #{group}"
           end
 
           { data: group }.to_json
@@ -40,26 +39,36 @@ module CGroup2
           routing.put do
             req_data = JSON.parse(routing.body.read)
 
-            member = AddMmeber.call(
+            member = AddMember.call(
               account: @auth_account,
-              group: @group,
+              group: @req_group,
               member_email: req_data['email']
             )
 
             { data: member }.to_json
-          rescue AddMmeber::ForbiddenError => e
+          rescue AddMember::ForbiddenError => e
             routing.halt 403, { message: e.message }.to_json
           rescue StandardError
-            routing.halt 500, { message: 'API server error'}.to_json
+            routing.halt 500, { message: 'API server error' }.to_json
           end
 
           # DELETE api/v1/group_events/[grp_id]/members
           routing.delete do
             req_data = JSON.parse(routing.body.read)
-            member = RemoveMember.call(
+            action = req_data['action']
+
+            task_list = {
+              'remove' => { service: RemoveMember,
+                            message: 'Removed member from group' },
+              'leave' => { service: LeaveGroup,
+                            message: 'Leave group' }
+            }
+
+            task = task_list[action]
+            member = task[:service].call(
               req_username: @auth_account.name,
               member_email: req_data['email'],
-              group_id: group_id
+              group_id: grp_id
             )
 
             { message: "#{member.name} removed from group",

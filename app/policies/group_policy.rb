@@ -37,7 +37,7 @@ module CGroup2
     end
 
     def can_join?
-      not (account_is_owner? or account_is_member?)
+      (not (account_is_owner? or account_is_member?)) && members_are_enough?
     end
 
     def summary
@@ -61,6 +61,10 @@ module CGroup2
 
     def account_is_member?
       @group.members.include?(@account)
+    end
+
+    def members_are_enough?
+      (@group.members.count+1) <= @group.limit_number
     end
   end
 end

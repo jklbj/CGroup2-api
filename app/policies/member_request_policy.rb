@@ -12,11 +12,15 @@ module CGroup2
     end
 
     def can_invite?
-      @requestor.can_add_members? && @target.can_join?
+      @target.can_join?
     end
 
     def can_remove?
       @requestor.can_remove_members? && target_is_member?
+    end
+
+    def can_leave?
+      (@requestor_account == @target_account) && target_is_member?
     end
 
     private

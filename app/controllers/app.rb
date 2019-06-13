@@ -9,6 +9,7 @@ module CGroup2
   # Web controller for CGroup2 API
   class Api < Roda
     plugin :halt
+    plugin :all_verbs
     plugin :multi_route
     plugin :request_headers
     include SecureRequestHelpers
