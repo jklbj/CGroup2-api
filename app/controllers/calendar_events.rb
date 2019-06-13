@@ -40,6 +40,7 @@ module CGroup2
       rescue Sequel::MassAssignmentRestriction
         routing.halt 400, { message: 'Illegal Request' }.to_json
       rescue StandardError => e
+        puts "error message: #{e}"
         routing.halt 500, { message: e.message }.to_json
       end
     end
