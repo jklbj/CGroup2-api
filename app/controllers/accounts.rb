@@ -13,10 +13,14 @@ module CGroup2
       routing.on String do |account_name|    
         # GET api/v1/accounts/[name]
         routing.get do
-          usr = Account.first(name: account_name)
-          usr ? usr.to_json : raise('Account not found')
+          account = GetAccountQuery.call(
+            requestor: @auth_account, username: account_name
+          )
+        rescue GetAccountQuery::ForbiddenError => e
+          routing.halt 404, { message: e.message }.to_json
         rescue StandardError => error
-          routing.halt 404, { message: error.message }.to_json
+          puts "GET ACCOUNT ERROR: #{e.inspect}"
+          routing.halt 500, { message: 'API Server Error' }.to_json
         end
       end
 
@@ -24,7 +28,7 @@ module CGroup2
       routing.post do
         new_data = JSON.parse(routing.body.read)
         new_account = Account.new(new_data)
-        raise('Could not save project') unless new_account.save
+        raise('Could not save account') unless new_account.save
 
         response.status = 201
         response['Location'] = "#{@usr_route}/#{new_account.name}"

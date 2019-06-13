@@ -22,7 +22,7 @@ module CGroup2
 
       #GET api/v1/calendar_events
       routing.get do
-        calendar_events = @auth_account.calendars
+        calendar_events = @auth_account.calendar_events
         JSON.pretty_generate(data: calendar_events)
       rescue StandardError => e
         puts "error message: #{e}"

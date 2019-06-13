@@ -22,7 +22,7 @@ module CGroup2
 
     # Secure getters and setters
     def title
-        SecureDB.decrypt(title_secure)
+        SecureDB.decrypt(title_secure).force_encoding("UTF-8")
     end
 
     def title=(plaintext)
@@ -30,7 +30,7 @@ module CGroup2
     end
 
     def description
-        SecureDB.decrypt(description_secure)
+        SecureDB.decrypt(description_secure).force_encoding("UTF-8")
     end
 
     def description=(plaintext)
@@ -38,26 +38,34 @@ module CGroup2
     end 
 
     # rubocop:disable MethodLength
-    def to_json(options = {})
-      JSON(
-        {
-          type: 'group',
-          attribute: {
-            group_id: group_id,
-            title: title,
-            description: description,
-            limit_number: limit_number,
-            due_at: due_at,
-            event_start_at: event_start_at,
-            event_end_at: event_end_at            
-          },
-          include: {
-            account: account
-          }           
-        }, options
-      )
+    def to_h(options = {})
+      {
+        type: 'group',
+        attribute: {
+          group_id: group_id,
+          title: title,
+          description: description,
+          limit_number: limit_number,
+          due_at: due_at,
+          event_start_at: event_start_at,
+          event_end_at: event_end_at            
+        }        
+      }
     end
     # rubocop:enable MethodLength
+
+    def full_details
+      to_h.merge(
+        relationships: {
+          account: account,
+          members: members
+        }
+      )
+    end
+
+    def to_json(options = {})
+      JSON(to_h, options)
+    end
   end
 end
             
