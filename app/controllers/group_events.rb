@@ -12,7 +12,7 @@ module CGroup2
 
       @group_route = "#{@api_root}/group_events"
       routing.on String do |grp_id|
-        @req_group = Group.first(group_id: grp_id)
+        @req_group = Group.first(group_id: grp_id) unless grp_id.eql? "all"
 
         #GET api/v1/group_events/[grp_id]
         routing.get do
@@ -22,6 +22,7 @@ module CGroup2
             group = GetGroupQuery.call(
               account: @auth_account, group: @req_group
             )
+            
           end
 
           { data: group }.to_json
