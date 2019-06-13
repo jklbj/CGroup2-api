@@ -1,6 +1,5 @@
 .bundle/
 config/secrets.yml
 app/db/store/*
-app/services/time_matching.rb
 specs/unit/time_matching_spec.rb
 _*

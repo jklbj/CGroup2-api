@@ -4,7 +4,7 @@
   limit_number: 4
   due_at: '2019-04-21 12:13:40'
   event_start_at: '2019-04-20 12:13:40'
-  event_end_at: '2019-05-01 10:00:00'
+  event_end_at: '2019-05-22 08:00:00'
 - title: 'sell candies'
   description: 'Gd2'
   limit_number: 3
