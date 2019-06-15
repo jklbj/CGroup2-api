@@ -68,9 +68,10 @@ module CGroup2
     end
 
     def to_h(title, description, start, end_d)
+      desc = "no description" if description.to_s.eql? ""
       {
         title: title,
-        description: description,
+        description: desc,
         event_start_at: start,
         event_end_at: end_d
       }

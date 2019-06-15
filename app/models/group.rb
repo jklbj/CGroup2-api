@@ -22,7 +22,7 @@ module CGroup2
 
     # Secure getters and setters
     def title
-        SecureDB.decrypt(title_secure).encoding
+        SecureDB.decrypt(title_secure).force_encoding("UTF-8")
     end
 
     def title=(plaintext)
@@ -30,7 +30,7 @@ module CGroup2
     end
 
     def description
-        SecureDB.decrypt(description_secure).encoding
+        SecureDB.decrypt(description_secure).force_encoding("UTF-8")
     end
 
     def description=(plaintext)
