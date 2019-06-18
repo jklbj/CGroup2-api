@@ -22,10 +22,15 @@ module CGroup2
             group = GetGroupQuery.call(
               account: @auth_account, group: @req_group
             )
-            
+            timematch = TimeMatching.call(@req_group)
           end
 
-          { data: group }.to_json
+          if timematch != nil
+            all = { data: group.merge(timematching: timematch)}
+          else
+            all = { data: group}
+          end
+          all.to_json
         rescue GetGroupQuery::ForbiddenError => e
           routing.halt 403, { message: e.message }.to_json
         rescue GetGroupQuery::NotFoundError => e
