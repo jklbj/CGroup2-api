@@ -7,7 +7,7 @@ require 'rbnacl'
 module Securable
 
   def generate_key
-    key = RbNaCl::Random.ramdom_bytes(RbNaCl::SecretBox.key_bytes)
+    key = RbNaCl::Random.random_bytes(RbNaCl::SecretBox.key_bytes)
     Base64.strict_encode64 key
   end
 

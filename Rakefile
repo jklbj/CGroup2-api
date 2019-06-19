@@ -46,10 +46,24 @@ task :console => :print_env do
 end
 
 namespace :newkey do
+  task(:load_libs) { require_app 'lib' }
+
   desc 'Create sample cryptographic key for database'
-  task :db do
-    require_app('lib')
+  task :db => :load_libs do
     puts "DB_KEY: #{SecureDB.generate_key}"
+  end
+
+  desc 'Create sample cryptographic key for tokens and messaging'
+  task :msg => :load_libs do
+    puts "MSG_KEY: #{AuthToken.generate_key}"
+  end
+
+  desc 'Create sample sign/verify keypair for signed communication'
+  task :signing => :load_libs do
+    keypair = SignedRequest.generate_keypair
+
+    puts "SIGNING_KEY: #{keypair[:signing_key]}"
+    puts " VERIFY_KEY: #{keypair[:verify_key]}"
   end
 end
 
@@ -68,9 +82,8 @@ namespace :db do
 
   desc 'Delete database'
   task :delete do
-    app.DB[:calendars].delete
-    app.DB[:groups].delete
-    app.DB[:accounts].delete
+    app.DB[:documents].delete
+    app.DB[:projects].delete
   end
 
   desc 'Delete dev or test database file'
