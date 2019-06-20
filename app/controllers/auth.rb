@@ -17,8 +17,7 @@ module CGroup2
       routing.on 'register' do
         # POST api/v1/auth/register
         routing.post do 
-          reg_data = JsonRequestBody.parse_symbolize(request.body.read)
-          VerifyRegistration.new(Api.config, reg_data).call
+          VerifyRegistration.new(Api.config, @request_data).call
 
           response.status = 202
           { message: 'Verification email sent' }.to_json
