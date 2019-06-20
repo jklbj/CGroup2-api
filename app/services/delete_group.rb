@@ -16,6 +16,8 @@ module CGroup2
         
         policy = OwnerRequestPolicy.new(group, account)
         raise ForbiddenError unless policy.can_delete_group?
+
+        puts "group members: #{group.members}"
   
         group.delete
       end

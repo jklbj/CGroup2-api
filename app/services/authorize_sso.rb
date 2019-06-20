@@ -60,8 +60,10 @@ module CGroup2
       calendar_events.each do |event|
         repeat = false
         start = date_format_transform(event[:event_start_at])
+        puts "start: #{start}"
         end_d = date_format_transform(event[:event_end_at])
         database_calendar_events.each do |database_event|
+          puts "equel: #{((start == database_event.event_start_at.to_s) && (end_d == database_event.event_end_at.to_s)) }"
           repeat = true if ((start == database_event.event_start_at.to_s) && (end_d == database_event.event_end_at.to_s)) 
         end
         @auth_account.add_calendar(event) unless repeat
