@@ -64,9 +64,11 @@ module CGroup2
         end_d = date_format_transform(event[:event_end_at])
         puts "end: #{end_d}"
         database_calendar_events.each do |database_event|
-          puts "database start: #{database_event.event_start_at.to_s}"
-          puts "database end: #{database_event.event_end_at.to_s}"
-          repeat = true if ((start == database_event.event_start_at.to_s) && (end_d == database_event.event_end_at.to_s)) 
+          database_start = date_format_transform(database_event.event_start_at.to_s)
+          database_end = date_format_transform(database_event.event_end_at.to_s)
+          puts "database start: #{database_start}"
+          puts "database end: #{database_end}"
+          repeat = true if ((start.eql? database_start) && (end_d.eql? database_end)) 
         end
         @auth_account.add_calendar(event) unless repeat
       end
@@ -88,10 +90,9 @@ module CGroup2
 
     def date_format_transform(date)
       date.gsub!("T", " ")
-      date.sub!("+", " +")
-      date[23] = ""
-
-      date
+      date.sub!(" +", "+")
+      
+      date.split("+")[0]
     end
   end
 end
