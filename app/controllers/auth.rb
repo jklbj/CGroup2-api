@@ -37,7 +37,7 @@ module CGroup2
           auth_account.to_json
         rescue AuthenticateAccount::UnauthorizedError => e
           puts [e.class, e.message].join ': '
-          routing.halt '403', { message: 'Invalid credentials' }.to_json
+          routing.halt '401', { message: 'Invalid credentials' }.to_json
         end
       end
     end
