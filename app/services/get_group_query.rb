@@ -20,9 +20,7 @@ module CGroup2
     def self.call(account:, group:)
       raise NotFoundError unless group
       policy = GroupPolicy.new(account, group)
-      puts "policy can view:#{policy.can_view?}"
       raise ForbiddenError unless policy.can_view?
-      puts group.full_details.merge(policies: policy.summary)
 
       group.full_details.merge(policies: policy.summary)
     end

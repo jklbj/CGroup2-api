@@ -13,12 +13,9 @@ module CGroup2
 
       total_cal = []
 
-      puts "22222222222222222"
-      puts "//////////////////#{group.account}"
-
       total_cal = group.account.calendars if group.account.calendars != nil
 
-      puts "11111111111111111"
+      total_cal.append(group)
 
       total_cal.each do |cal|
         if ta.length == 0
@@ -199,33 +196,33 @@ module CGroup2
         end
       end
 
-      ta.each do |time|
-        if ((time <=> group.event_start_at) == -1) && (ta.index(group.event_start_at) == nil)
-          ta.delete_at(ta.index(time))
-          ta.insert(0, group.event_start_at)
-          has[group.event_start_at] = 1
-        elsif ((time <=> group.event_start_at) == -1) && (ta.index(group.event_start_at) != nil)
-          ta.delete_at(ta.index(time))
-          has[group.event_start_at] += has[time]
+      ta1 = []
+
+      if has[ta[ta.index(group.event_start_at) - 1]] == 0
+        ta.each do |k|
+          if (k <=> group.event_start_at) != -1
+            ta1.push(k)
+          end
+        end
+      elsif has[ta[ta.index(group.event_start_at) - 1]] != 0
+        has[group.event_start_at] += has[ta[ta.index(group.event_start_at) - 1]]
+        ta.each do |k|
+          if (k <=> group.event_start_at) != -1
+            ta1.push(k)
+          end
         end
       end
 
-      ta1 = []
-
-      ta.each do |time|
-        if ((group.event_end_at <=> time) == -1) && (ta.index(group.event_end_at) == nil)
-          ta.insert(-1, group.event_end_at)
-          has[group.event_end_at] = 1
-        elsif ((group.event_end_at <=> time) == -1) && (ta.index(group.event_end_at) != nil)
-          has[group.event_end_at] += has[time]
-        else
-          ta1.push(time)
+      ta.each do |k|
+        if (group.event_end_at <=> k) != 1
+          ta1.delete(k)
         end
       end
 
       timearray = []
 
-      ta1.each{|time| timearray.push([date_format_transform(time), has[time]])}
+      ta1.each{|time| timearray.push([date_format_transform(time), has[time] - 1])}
+
       timearray
     end
 

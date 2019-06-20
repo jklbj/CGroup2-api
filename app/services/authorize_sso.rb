@@ -25,6 +25,7 @@ module CGroup2
 
     def call(access_token)
       response_data = get_google_calendar(access_token)
+      puts "response data:#{response_data}"
       find_or_create_calendar_events(response_data)
     end
 
@@ -68,7 +69,11 @@ module CGroup2
     end
 
     def to_h(title, description, start, end_d)
-      desc = "no description" if description.to_s.eql? ""
+      if description.to_s.eql? ""
+        desc = "no description"
+      else
+        desc = description
+      end
       {
         title: title,
         description: desc,
