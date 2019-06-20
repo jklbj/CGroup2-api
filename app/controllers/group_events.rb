@@ -40,20 +40,6 @@ module CGroup2
           puts "FIND GROUP ERROR: #{e.inspect}"
           routing.halt 500, { message: 'API server error' }.to_json
         end
-
-        #DELETE api/v1/group_events/[grp_id]
-        routing.delete do
-          group = DeleteGroup.call(
-            req_username: @auth_account.name,
-            group_id: grp_id
-          )
-
-          { message: "#{group.title} deleted." }.to_json
-        rescue DeleteGroup::ForbiddenError => e
-          routing.halt 403, { message: e.message }.to_json
-        rescue StandardError
-          routing.halt 500, { message: 'API server error' }.to_json
-        end
           
         routing.on('members') do # rubocop:disable Metrics/BlockLength
           # PUT api/v1/group_events/[grp_id]/members
@@ -75,8 +61,11 @@ module CGroup2
 
           # DELETE api/v1/group_events/[grp_id]/members
           routing.delete do
+            puts "123"
             req_data = JSON.parse(routing.body.read)
+            puts "action: #{req_data}"
             action = req_data['action']
+            puts "action: #{action}"
 
             task_list = {
               'remove' => { service: RemoveMember,
@@ -99,6 +88,20 @@ module CGroup2
           rescue StandardError
             routing.halt 500, { message: 'API server error' }.to_json
           end
+        end
+
+        #DELETE api/v1/group_events/[grp_id]
+        routing.delete do
+          group = DeleteGroup.call(
+            req_username: @auth_account.name,
+            group_id: grp_id
+          )
+
+          { message: "#{group.title} deleted." }.to_json
+        rescue DeleteGroup::ForbiddenError => e
+          routing.halt 403, { message: e.message }.to_json
+        rescue StandardError
+          routing.halt 500, { message: 'API server error' }.to_json
         end
       end
 
