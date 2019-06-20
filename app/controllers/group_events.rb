@@ -22,6 +22,7 @@ module CGroup2
             group = GetGroupQuery.call(
               account: @auth_account, group: @req_group
             )
+
             timematch = TimeMatching.call(@req_group)
           end
 

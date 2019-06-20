@@ -13,7 +13,13 @@ module CGroup2
 
       total_cal = []
 
-      total_cal = group.account.calendars
+      puts "22222222222222222"
+      puts "//////////////////#{group.account}"
+
+      total_cal = group.account.calendars if group.account.calendars != nil
+
+      puts "11111111111111111"
+
       total_cal.each do |cal|
         if ta.length == 0
           ta.append(cal.event_start_at)
@@ -72,11 +78,9 @@ module CGroup2
 
               #If there are two  events ending at the same time
               elsif (ta[cal_count] <=> cal.event_end_at) == 0
-                has[cal.event_end_at] = has[cal.event_end_at] + 1
                 i = ta.index(cal.event_start_at) + 1
-                has[cal.event_end_at] = has[ta[cal_count - 1]] - 1
-
-                until i == cal_count do
+                
+                until i == cal_count + 1 do
                   has[ta[i]] = has[ta[i]] + 1
                   i += 1
                 end
@@ -164,11 +168,9 @@ module CGroup2
 
                 #If there are two  events ending at the same time
                 elsif (ta[cal_count] <=> cal.event_end_at) == 0
-                  has[cal.event_end_at] = has[cal.event_end_at] + 1
                   i = ta.index(cal.event_start_at) + 1
-                  has[cal.event_end_at] = has[ta[cal_count - 1]] - 1
 
-                  until i == cal_count do
+                  until i == cal_count + 1 do
                     has[ta[i]] = has[ta[i]] + 1
                     i += 1
                   end
