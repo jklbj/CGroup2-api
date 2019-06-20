@@ -16,6 +16,10 @@ module CGroup2
       account_is_owner? || account_is_member?
     end
 
+    def can_view_calendars?
+      account_is_owner? || account_is_member?
+    end
+
     def can_edit?
       account_is_owner?
     end
@@ -44,6 +48,7 @@ module CGroup2
       {
         can_view: can_view?,
         can_view_members: can_view_members?,
+        can_view_calendars: can_view_calendars?,
         can_edit: can_edit?,
         can_delete: can_delete?,
         can_leave: can_leave?,
