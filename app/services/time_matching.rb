@@ -12,10 +12,8 @@ module CGroup2
       total_cal = group.account.calendars if group.account.calendars != nil
 
       total_cal.append(group)
-
-      total_cal.each{|time| puts time.event_start_at}
+      
       total_cal.each do |cal|
-        puts "cal: #{cal.event_start_at}"
         if ta.length == 0
           ta.append(cal.event_start_at)
           ta.append(cal.event_end_at)
@@ -57,10 +55,8 @@ module CGroup2
 
           until finish == 1 || cal_count == 10 do
             if cal_count < ta.length - 1
-              puts "111111111"
               #Insert into two events (-1 means first is earlier)
               if ((ta[cal_count] <=> cal.event_end_at) == -1) && ((ta[cal_count + 1] <=> cal.event_end_at) == 1)
-                puts "2222222"
                 ta.insert(cal_count + 1, cal.event_end_at)
 
                 i = ta.index(cal.event_start_at) + 1
@@ -75,7 +71,6 @@ module CGroup2
 
               #If there are two  events ending at the same time
               elsif ((ta[cal_count] <=> cal.event_end_at) == -1) && ((ta[cal_count] <=> cal.event_end_at) == 0)
-                puts "333333"
                 i = ta.index(cal.event_start_at) + 1
                 
                 until i == cal_count + 1 do
@@ -89,7 +84,6 @@ module CGroup2
               end
               #If the end event is the lastest
             elsif ((ta[cal_count] <=> cal.event_end_at) == -1) && (cal_count == ta.length - 1)
-              puts "222222"
               ta.insert(-1, cal.event_end_at)
 
               i = ta.index(cal.event_start_at) + 1
@@ -107,7 +101,6 @@ module CGroup2
         end
       end
 
-      puts "members"
       group.members.each do |member|
         total_cal = member.calendars
         total_cal.each do |cal|
@@ -193,7 +186,6 @@ module CGroup2
         end
       end
 
-      puts "Finish"
       ta1 = []
 
       if has[ta[ta.index(group.event_start_at) - 1]] == 0
