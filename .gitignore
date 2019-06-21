@@ -2,4 +2,6 @@
 config/secrets.yml
 app/db/store/*
 specs/unit/time_matching_spec.rb
+coverage/
+!coverage/.resultset.json
 _*
