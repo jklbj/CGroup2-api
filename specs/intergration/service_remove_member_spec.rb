@@ -2,7 +2,7 @@
 
 require_relative '../spec_helper'
 
-describe 'Test AddMember service' do
+describe 'Test RemoveMember service' do
   before do
     wipe_database
 
@@ -17,26 +17,30 @@ describe 'Test AddMember service' do
     @group = CGroup2::CreateGroupForOwner.call(
       owner_id: @owner.account_id, group_data: group_data
     )
-  end
-
-  it 'HAPPY: should be able to add a member to a group' do
     CGroup2::AddMember.call(
       account: @owner,
       group: @group,
       member_email: @member.email
     )
-
-    _(@member.participations.count).must_equal 1
-    _(@member.participations.first).must_equal @group
   end
 
-  it 'BAD: should not add owner as a member' do
+  it 'HAPPY: should be able to remove a member from a group' do
+    CGroup2::RemoveMember.call(
+      req_username: @owner.name,
+      member_email: @member.email,
+      group_id: @group.group_id
+    )
+
+    _(@member.participations.count).must_equal 0
+  end
+
+  it 'BAD: should not remove owner as a member' do
     proc {
-      CGroup2::AddMember.call(
-        account: @owner,
-        group: @group,
-        member_email: @owner.email
+      CGroup2::RemoveMember.call(
+        req_username: @member.name,
+        member_email: @owner.email,
+        group_id: @group.group_id
       )
-    }.must_raise CGroup2::AddMember::ForbiddenError
+    }.must_raise CGroup2::RemoveMember::ForbiddenError
   end
 end

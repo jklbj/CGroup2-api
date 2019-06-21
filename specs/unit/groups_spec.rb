@@ -33,6 +33,5 @@ describe 'Test group Handling' do
 
     _(stored_event[:title_secure]).wont_equal new_event.title
     _(stored_event[:description_secure]).wont_equal new_event.description
-    _(stored_event[:member_id_secure]).wont_equal new_event.member_id
   end
 end
