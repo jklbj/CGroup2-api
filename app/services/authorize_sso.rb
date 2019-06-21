@@ -25,7 +25,6 @@ module CGroup2
 
     def call(access_token)
       response_data = get_google_calendar(access_token)
-      puts "response data:#{response_data}"
       find_or_create_calendar_events(response_data)
     end
 
@@ -60,14 +59,11 @@ module CGroup2
       calendar_events.each do |event|
         repeat = false
         start = date_format_transform(event[:event_start_at])
-        puts "start: #{start}"
         end_d = date_format_transform(event[:event_end_at])
-        puts "end: #{end_d}"
+
         database_calendar_events.each do |database_event|
           database_start = date_format_transform(database_event.event_start_at.to_s)
           database_end = date_format_transform(database_event.event_end_at.to_s)
-          puts "database start: #{database_start}"
-          puts "database end: #{database_end}"
           repeat = true if ((start.eql? database_start) && (end_d.eql? database_end)) 
         end
         @auth_account.add_calendar(event) unless repeat

@@ -26,16 +26,8 @@ end
 
 def auth_header(account_data)
   auth = authenticate(account_data)
+  
   "Bearer #{auth[:attributes][:auth_token]}"
-end
-
-def authorization(account_data)
-  auth = authenticate(account_data)
-
-  contents = AuthToken.contents(auth[:attributes][:auth_token])
-  account = contents['payload']['attributes']
-  { account: Credence::Account.first(username: account['username']),
-    scope:   AuthScope.new(contents['scope']) }
 end
 
 DATA = {} # rubocop:disable Style/MutableConstant
