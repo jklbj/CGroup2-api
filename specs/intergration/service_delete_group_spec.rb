@@ -2,7 +2,7 @@
 
 require_relative '../spec_helper'
 
-describe 'Test LeaveGroup service' do
+describe 'Test DeleteGroup service' do
   before do
     wipe_database
 
