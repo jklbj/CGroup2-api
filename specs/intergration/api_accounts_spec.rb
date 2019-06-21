@@ -11,19 +11,26 @@ describe 'Test Account Handling' do
   end
   
   describe 'Account information' do
-    it 'HAPPY: should be able to get details of a single account' do
-      account_data = DATA[:accounts][0]
-      account = CGroup2::Account.create(account_data)
+    before do
+      @account_data = DATA[:accounts][0]
+      @account = CGroup2::Account.create(@account_data)
+    end
 
-      header 'AUTHORIZATION', auth_header(account_data)
-      get "/api/v1/accounts/#{account.name}"
+    it 'HAPPY: should be able to get details of a single account' do
+      header 'AUTHORIZATION', auth_header(@account_data)
+      get "/api/v1/accounts/#{@account.name}"
       _(last_response.status).must_equal 200
 
       attributes = JSON.parse(last_response.body)['attributes']
-      _(attributes['name']).must_equal account.name
+      _(attributes['name']).must_equal @account.name
       _(attributes['salt']).must_be_nil
       _(attributes['password']).must_be_nil
       _(attributes['password_hash']).must_be_nil
+    end
+
+    it 'BAD: should not get the account details without authentication' do
+      get "/api/v1/accounts/#{@account.name}"
+      _(last_response.status).must_equal 404
     end
   end
 
