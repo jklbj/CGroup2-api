@@ -30,6 +30,6 @@ class AccountPolicy
   private
 
   def self_request?
-    @requestor = @account
+    @requestor == @account
   end
 end

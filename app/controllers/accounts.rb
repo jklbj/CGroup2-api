@@ -16,6 +16,7 @@ module CGroup2
           account = GetAccountQuery.call(
             requestor: @auth_account, username: account_name
           )
+          account.to_json
         rescue GetAccountQuery::ForbiddenError => e
           routing.halt 404, { message: e.message }.to_json
         rescue StandardError => error

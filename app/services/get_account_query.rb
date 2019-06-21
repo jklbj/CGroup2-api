@@ -10,7 +10,7 @@ module CGroup2
     end
 
     def self.call(requestor:, username:)
-      account = Account.first(username: username)
+      account = Account.first(name: username)
 
       policy = AccountPolicy.new(requestor, account)
       policy.can_view? ? account : raise(ForbiddenError)

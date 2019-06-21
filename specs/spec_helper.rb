@@ -17,6 +17,27 @@ def wipe_database
   CGroup2::Calendar.map(&:destroy)
 end
 
+def authenticate(account_data)
+  CGroup2::AuthenticateAccount.call(
+    name: account_data['name'],
+    password: account_data['password']
+  )
+end
+
+def auth_header(account_data)
+  auth = authenticate(account_data)
+  "Bearer #{auth[:attributes][:auth_token]}"
+end
+
+def authorization(account_data)
+  auth = authenticate(account_data)
+
+  contents = AuthToken.contents(auth[:attributes][:auth_token])
+  account = contents['payload']['attributes']
+  { account: Credence::Account.first(username: account['username']),
+    scope:   AuthScope.new(contents['scope']) }
+end
+
 DATA = {} # rubocop:disable Style/MutableConstant
 DATA[:accounts] = YAML.safe_load File.read('app/db/seeds/account_seeds.yml')
 DATA[:calendar_events] = YAML.safe_load File.read('app/db/seeds/calendar_seeds.yml')
