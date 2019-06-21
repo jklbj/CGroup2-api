@@ -17,7 +17,6 @@ describe 'Test TimeMatching service' do
   end
 
   it 'HAPPY: should retrieve correct data from database' do
-    puts "First"
     @account1.add_calendar(@calendar_event_data[1])
     @account1.add_calendar(@calendar_event_data[2])
     @account1.add_calendar(@calendar_event_data[3])
@@ -28,13 +27,11 @@ describe 'Test TimeMatching service' do
     CGroup2::AddMember.call(
         account: @account1, group: group, member_email: @account2.email
     )
-
-    puts "1111"
-    puts CGroup2::TimeMatching.call(group)
+    
+    CGroup2::TimeMatching.call(group)
   end
 
   it 'HAPPY: time start at the same time' do
-    puts "Second"
     @account1.add_calendar(@calendar_event_data[1])
     @account1.add_calendar(@calendar_event_data[4])
     @account2.add_calendar(@calendar_event_data[2])
@@ -46,13 +43,10 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    puts "1111"
-    puts CGroup2::TimeMatching.call(group)
+    CGroup2::TimeMatching.call(group)
   end
 
   it 'HAPPY: group time is lastest' do
-    puts "Second"
-
     group = CGroup2::CreateGroupForOwner.call(
       owner_id: @account1.account_id, group_data: @group_event_data[2]
     )
@@ -60,12 +54,10 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    puts "1111"
-    puts CGroup2::TimeMatching.call(group)
+    CGroup2::TimeMatching.call(group)
   end
 
   it 'HAPPY: member event start time is earliest' do
-    puts "First"
     @account2.add_calendar(@calendar_event_data[9])
     
     group = CGroup2::CreateGroupForOwner.call(
@@ -75,13 +67,10 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    puts "1111"
-    puts CGroup2::TimeMatching.call(group)
+    CGroup2::TimeMatching.call(group)
   end
 
   it 'HAPPY: member event end time is lastest' do
-    puts "First"
-    
     @account2.add_calendar(@calendar_event_data[8])
     group = CGroup2::CreateGroupForOwner.call(
       owner_id: @account1.account_id, group_data: @group_event_data[0]
@@ -90,19 +79,15 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    puts "1111"
-    puts CGroup2::TimeMatching.call(group)
+    CGroup2::TimeMatching.call(group)
   end
 
-  it 'HAPPY: group event start time is between an event start and end' do
-    puts "First"
-    
+  it 'HAPPY: group event start time is between an event start and end' do    
     @account2.add_calendar(@calendar_event_data[9])
     group = CGroup2::CreateGroupForOwner.call(
       owner_id: @account2.account_id, group_data: @group_event_data[0]
     )
 
-    puts "1111"
-    puts CGroup2::TimeMatching.call(group)
+    CGroup2::TimeMatching.call(group)
   end
 end
