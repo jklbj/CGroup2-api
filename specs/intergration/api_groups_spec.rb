@@ -198,7 +198,6 @@ describe 'Test Group Handling' do
       { action: 'remove', email: @wrong_account.email }.to_json
 
       member = JSON.parse(last_response.body)['data']['attributes']
-      puts "member: #{member}"
       
       member['name'].must_equal 'KevinYang'
       member['email'].must_equal 'KevinYang@gmail.com'
