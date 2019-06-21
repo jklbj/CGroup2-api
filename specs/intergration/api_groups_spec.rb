@@ -133,4 +133,84 @@ describe 'Test Group Handling' do
       _(last_response.header['Location']).must_be_nil
     end
   end
+
+  describe 'Delete a Group Event' do
+    before do
+      @grp_data = DATA[:group_events][1]
+      @grp = @account.add_group(@grp_data)
+    end
+
+    it 'HAPPY: should delete a group event' do
+      header 'AUTHORIZATION', auth_header(@account_data)
+      delete "api/v1/group_events/#{@grp.group_id}"
+
+      deleted = JSON.parse(last_response.body)
+      deleted['message'].must_include 'deleted'
+    end
+
+    it 'SAD: should not delete a group event' do
+      header 'AUTHORIZATION', auth_header(@wrong_account_data)
+      delete "api/v1/group_events/#{@grp.group_id}"
+
+      _(last_response.status).must_equal 403
+    end
+  end
+
+  describe 'Add a group member' do
+    before do
+      @grp_data = DATA[:group_events][1]
+      @grp = @account.add_group(@grp_data)
+    end
+
+    it 'HAPPY: should be added a member to a group' do
+      header 'AUTHORIZATION', auth_header(@account_data)
+      put "api/v1/group_events/#{@grp.group_id}/members",
+      { email: @wrong_account.email }.to_json
+
+      member = JSON.parse(last_response.body)['data']['attributes']
+      
+      member['name'].must_equal 'KevinYang'
+      member['email'].must_equal 'KevinYang@gmail.com'
+    end
+
+    it 'SAD: should not be added a member to a group' do
+      @grp.add_member(@wrong_account)
+
+      header 'AUTHORIZATION', auth_header(@account_data)
+      put "api/v1/group_events/#{@grp.group_id}/members",
+      { email: @wrong_account.email }.to_json
+
+      _(last_response.status).must_equal 403
+    end
+  end
+
+  describe 'Remove a member from a group' do
+    before do
+      @grp_data = DATA[:group_events][1]
+      @grp = @account.add_group(@grp_data)
+    end
+
+    it 'HAPPY: should be romoved a member from a group' do
+      @grp.add_member(@wrong_account)
+
+      header 'AUTHORIZATION', auth_header(@account_data)
+      delete "api/v1/group_events/#{@grp.group_id}/members",
+      { action: 'remove', email: @wrong_account.email }.to_json
+
+      member = JSON.parse(last_response.body)['data']['attributes']
+      puts "member: #{member}"
+      
+      member['name'].must_equal 'KevinYang'
+      member['email'].must_equal 'KevinYang@gmail.com'
+    end
+
+    it 'SAD: should not be added a member to a group' do
+
+      header 'AUTHORIZATION', auth_header(@account_data)
+      delete "api/v1/group_events/#{@grp.group_id}/members",
+      { action: 'remove', email: @wrong_account.email }.to_json
+
+      _(last_response.status).must_equal 403
+    end
+  end
 end
