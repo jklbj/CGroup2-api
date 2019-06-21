@@ -30,8 +30,6 @@ module CGroup2
             all = { data: group}
           end
           all.to_json
-        rescue GetGroupQuery::ForbiddenError => e
-          routing.halt 403, { message: e.message }.to_json
         rescue GetGroupQuery::NotFoundError => e
           routing.halt 404, { message: e.message }.to_json
         rescue StandardError => e
