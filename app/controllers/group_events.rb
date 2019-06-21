@@ -57,11 +57,8 @@ module CGroup2
 
           # DELETE api/v1/group_events/[grp_id]/members
           routing.delete do
-            puts "123"
             req_data = JSON.parse(routing.body.read)
-            puts "action: #{req_data}"
             action = req_data['action']
-            puts "action: #{action}"
 
             task_list = {
               'remove' => { service: RemoveMember,

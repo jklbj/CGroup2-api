@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../spec_helper'
+require 'webmock/minitest'
 
 describe 'Test Authentication Routes' do
   include Rack::Test::Methods
@@ -45,6 +46,47 @@ describe 'Test Authentication Routes' do
       _(last_response.status).must_equal 401
       _(result['message']).wont_be_nil
       _(result['attribute']).must_be_nil
+    end
+  end
+
+  describe 'Account Register' do
+    before do
+      @account_data = DATA[:accounts][1]
+
+      WebMock.enable!
+      WebMock.stub_request(:post, app.config.SENDGRID_URL)
+        .to_return(body:  "good",
+                   status:  200,
+                   headers: { 'content-type' => 'application/json' })
+    end
+
+    after do
+      WebMock.disable!
+    end
+
+    it 'HAPPY: should register a new account' do
+      credentials = { name: @account_data['name'],
+                      sex: @account_data['sex'],
+                      birth: @account_data['birth']
+                     }
+      post 'api/v1/auth/register',
+      SignedRequest.new(app.config).sign(credentials).to_json,
+      @req_header
+
+      _(last_response.status).must_equal 202
+    end
+
+    it 'BAD: should register a new account' do
+      @account = CGroup2::Account.create(@account_data)
+      credentials = { name: @account_data['name'],
+                      sex: @account_data['sex'],
+                      birth: @account_data['birth']
+                     }
+      post 'api/v1/auth/register',
+      SignedRequest.new(app.config).sign(credentials).to_json,
+      @req_header
+
+      _(last_response.status).must_equal 400
     end
   end
 end
