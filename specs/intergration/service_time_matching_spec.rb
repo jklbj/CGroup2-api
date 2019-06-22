@@ -27,12 +27,16 @@ describe 'Test TimeMatching service' do
     CGroup2::AddMember.call(
         account: @account1, group: group, member_email: @account2.email
     )
+
+    result = CGroup2::TimeMatching.call(group)
+    (CGroup2::TimeMatching.date_format_transform(result[0][0])).must_equal '2019-04-20T12:13:40'
     
-    CGroup2::TimeMatching.call(group)
+    (result[0][1]).must_equal 0
+    (result[1][1]).must_equal 1
+    (result[2][1]).must_equal 0
   end
 
   it 'HAPPY: time start at the same time' do
-    @account1.add_calendar(@calendar_event_data[1])
     @account1.add_calendar(@calendar_event_data[4])
     @account2.add_calendar(@calendar_event_data[2])
     @account2.add_calendar(@calendar_event_data[6])
@@ -43,7 +47,9 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    CGroup2::TimeMatching.call(group)
+    result = CGroup2::TimeMatching.call(group)
+    (CGroup2::TimeMatching.date_format_transform(result[0][0])).must_equal '2019-04-20T12:13:40'
+    (result[0][1]).must_equal 0
   end
 
   it 'HAPPY: group time is lastest' do
@@ -54,7 +60,19 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    CGroup2::TimeMatching.call(group)
+    result = CGroup2::TimeMatching.call(group)
+
+    (CGroup2::TimeMatching.date_format_transform(result[0][0])).must_equal '2019-04-25T12:13:40'
+    (CGroup2::TimeMatching.date_format_transform(result[1][0])).must_equal '2019-05-21T10:00:00'
+    (CGroup2::TimeMatching.date_format_transform(result[2][0])).must_equal '2019-05-22T10:00:00'
+    (CGroup2::TimeMatching.date_format_transform(result[3][0])).must_equal '2019-05-25T10:00:00'
+    (CGroup2::TimeMatching.date_format_transform(result[4][0])).must_equal '2019-05-26T10:00:00'
+
+    (result[0][1]).must_equal 0
+    (result[1][1]).must_equal 1
+    (result[2][1]).must_equal 0
+    (result[3][1]).must_equal 1
+    (result[4][1]).must_equal 0
   end
 
   it 'HAPPY: member event start time is earliest' do
@@ -67,7 +85,13 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    CGroup2::TimeMatching.call(group)
+    result = CGroup2::TimeMatching.call(group)
+
+    (CGroup2::TimeMatching.date_format_transform(result[0][0])).must_equal '2019-04-20T12:13:40'
+    (CGroup2::TimeMatching.date_format_transform(result[1][0])).must_equal '2019-04-30T10:00:00'
+    
+    (result[0][1]).must_equal 2
+    (result[1][1]).must_equal 0
   end
 
   it 'HAPPY: member event end time is lastest' do
@@ -79,7 +103,11 @@ describe 'Test TimeMatching service' do
         account: @account1, group: group, member_email: @account2.email
     )
 
-    CGroup2::TimeMatching.call(group)
+    result = CGroup2::TimeMatching.call(group)
+
+    (CGroup2::TimeMatching.date_format_transform(result[0][0])).must_equal '2019-04-20T12:13:40'
+    
+    (result[0][1]).must_equal 1
   end
 
   it 'HAPPY: group event start time is between an event start and end' do    
@@ -88,6 +116,11 @@ describe 'Test TimeMatching service' do
       owner_id: @account2.account_id, group_data: @group_event_data[0]
     )
 
-    CGroup2::TimeMatching.call(group)
+    result = CGroup2::TimeMatching.call(group)
+
+    (CGroup2::TimeMatching.date_format_transform(result[0][0])).must_equal '2019-04-20T12:13:40'
+    
+    (result[0][1]).must_equal 2
+    (result[1][1]).must_equal 0
   end
 end
